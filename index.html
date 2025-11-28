@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pour vivre ensemble, faisons un pas</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Monoton&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            overflow: hidden;
+            margin: 0; padding: 0;
+        }
+
+        /* --- Fond Animé --- */
+        .bg-animated {
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* --- Slides --- */
+        .slide-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .slide {
+            position: absolute; width: 95%; height: 95%; opacity: 0;
+            transform: scale(0.8) translateX(100px);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(255, 255, 255, 0.95); border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); padding: 1rem;
+            backdrop-filter: blur(10px); border: 4px solid white; overflow: hidden;
+        }
+        .slide.active { opacity: 1; transform: scale(1) translateX(0); pointer-events: all; z-index: 10; }
+        .slide.prev { transform: scale(0.8) translateX(-100px); opacity: 0; }
+
+        /* --- Titres --- */
+        .bubble-title {
+            background: #FF6B6B; color: white; padding: 0.8rem 2.5rem;
+            border-radius: 50px; box-shadow: 0 8px 0 #ee5253; margin-bottom: 1.5rem;
+            text-align: center; animation: float 6s ease-in-out infinite;
+            font-size: 2rem; font-weight: 800; letter-spacing: 1px; z-index: 20;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* --- Navigation --- */
+        .nav-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: white; width: 60px; height: 60px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: all 0.3s; z-index: 50;
+            font-size: 2rem; color: #333; user-select: none;
+        }
+        .nav-arrow:hover { transform: translateY(-50%) scale(1.15); background: #4ECDC4; color: white; }
+        .nav-prev { left: 20px; } .nav-next { right: 20px; }
+
+        /* --- Effet NÉON (Slide 7) --- */
+        /* État éteint */
+        .neon-off {
+            background: #222;
+            border: 4px solid #444;
+            color: #555;
+            box-shadow: none;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+        .neon-off .icon { filter: grayscale(100%) brightness(0.5); opacity: 0.5; }
+        .neon-off h3, .neon-off p { opacity: 0.3; }
+
+        /* État allumé */
+        .neon-on {
+            background: rgba(0,0,0,0.9);
+            border-color: #fff;
+            color: #fff;
+            transform: scale(1.05);
+        }
+        .neon-on .icon { filter: none; opacity: 1; text-shadow: 0 0 20px currentColor; }
+        .neon-on h3 { opacity: 1; text-shadow: 0 0 10px currentColor; animation: flicker 2s infinite alternate; }
+        .neon-on p { opacity: 1; }
+        
+        /* Couleurs Néon Spécifiques */
+        .neon-blue.neon-on { box-shadow: 0 0 20px #00eaff, inset 0 0 20px #00eaff; border-color: #00eaff; }
+        .neon-blue.neon-on h3 { color: #00eaff; }
+        
+        .neon-green.neon-on { box-shadow: 0 0 20px #00ff00, inset 0 0 20px #00ff00; border-color: #00ff00; }
+        .neon-green.neon-on h3 { color: #00ff00; }
+        
+        .neon-pink.neon-on { box-shadow: 0 0 20px #ff00de, inset 0 0 20px #ff00de; border-color: #ff00de; }
+        .neon-pink.neon-on h3 { color: #ff00de; }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.7; }
+        }
+
+        /* --- Banderole Défilante --- */
+        .marquee-container {
+            width: 100%; overflow: hidden; background: #000; color: #00ff00;
+            font-family: 'Courier New', monospace; font-weight: bold; padding: 15px 0;
+            position: absolute; top: 0; left: 0; z-index: 5;
+            border-bottom: 2px solid #00ff00;
+        }
+        .marquee-content { display: inline-block; white-space: nowrap; animation: scroll 25s linear infinite; font-size: 1.2rem; }
+        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        /* --- Clignotement Lent --- */
+        .blink-slow { animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.95); } }
+
+        /* --- Scrollbar masquée --- */
+        .scroll-y { overflow-y: auto; max-height: 100%; width: 100%; }
+        .scroll-y::-webkit-scrollbar { display: none; }
+        
+        /* --- Overlay Stats --- */
+        .stat-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.98);
+            z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 2rem; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .stat-overlay.visible { opacity: 1; pointer-events: all; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <div class="nav-arrow nav-prev" onclick="changeSlide(-1)">&#10094;</div>
+    <div class="nav-arrow nav-next" onclick="changeSlide(1)">&#10095;</div>
+
+    <div class="slide-container" id="slider">
+
+        <!-- 1. ACCUEIL (AVEC LOGOS) -->
+        <div class="slide active">
+            <h1 class="text-6xl font-bold text-center text-gray-800 mb-8 leading-tight">
+                Pour vivre ensemble,<br>
+                <span class="text-[#4ECDC4]">faisons un pas</span> 🦶
+            </h1>
+            
+            <div class="flex gap-6 mt-4 mb-12">
+                <div class="w-32 h-32 rounded-full bg-yellow-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.1s">🤝</div>
+                <div class="w-32 h-32 rounded-full bg-pink-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.2s">❤️</div>
+                <div class="w-32 h-32 rounded-full bg-blue-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.3s">🗣️</div>
+            </div>
+
+            <!-- Logos Partenaires -->
+            <div class="absolute bottom-10 w-full flex justify-center items-center gap-12 px-8">
+                <!-- Pas-de-Calais -->
+                <div class="flex flex-col items-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/fr/3/30/Logo_Pas-de-Calais_%282009%29.svg" alt="Pas-de-Calais" class="h-20 object-contain hover:scale-110 transition">
+                </div>
+                <!-- Léo Lagrange -->
+                <div class="flex flex-col items-center">
+                    <img src="https://www.leolagrange.org/wp-content/uploads/2019/04/logo-leo-lagrange.png" alt="Léo Lagrange" class="h-16 object-contain hover:scale-110 transition">
+                </div>
+                <!-- Démocratie & Courage -->
+                <div class="flex flex-col items-center bg-gray-100 px-4 py-2 rounded-xl border border-gray-300">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Programme</span>
+                    <span class="font-bold text-gray-800">Démocratie & Courage</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. PRÉSENTATION -->
+        <div class="slide">
+            <h2 class="bubble-title">👋 Qui suis-je ?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+                <div class="bg-blue-50 p-8 rounded-[40px] border-4 border-blue-200 shadow-lg">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-4">Moi, c'est...</h3>
+                    <input type="text" placeholder="Ton Prénom" class="w-full bg-transparent text-5xl font-bold text-center border-b-4 border-blue-300 focus:outline-none">
+                </div>
+                <div class="bg-green-50 p-8 rounded-[40px] border-4 border-green-200 shadow-lg">
+                    <h3 class="text-2xl font-bold text-green-600 mb-4">Ce que j'aime ❤️</h3>
+                    <textarea class="w-full bg-transparent text-2xl text-center resize-none focus:outline-none" rows="3"></textarea>
+                </div>
+                <div class="col-span-1 md:col-span-2 bg-purple-50 p-8 rounded-[40px] border-4 border-purple-200 shadow-lg text-center">
+                    <h3 class="text-2xl font-bold text-purple-600 mb-4">Plus tard, je veux être... 🚀</h3>
+                    <input type="text" placeholder="..." class="w-full bg-transparent text-4xl font-bold text-center focus:outline-none">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. LEO LAGRANGE -->
+        <div class="slide">
+            <h2 class="bubble-title">🦁 L'Association Léo Lagrange</h2>
+            <div class="text-9xl mb-8 animate-pulse">⛺ 🌍 🎲</div>
+            <p class="text-3xl text-gray-700 font-light mb-10 text-center">Éducation populaire pour :</p>
+            <div class="flex gap-4">
+                <div class="bg-orange-100 text-orange-700 p-6 rounded-3xl text-xl font-bold">Le temps libre</div>
+                <div class="bg-blue-100 text-blue-700 p-6 rounded-3xl text-xl font-bold">L'émancipation</div>
+                <div class="bg-green-100 text-green-700 p-6 rounded-3xl text-xl font-bold">La citoyenneté</div>
+            </div>
+        </div>
+
+        <!-- 4. RÈGLES -->
+        <div class="slide">
+            <h2 class="bubble-title">📜 Les règles du jeu</h2>
+            <div class="grid grid-cols-2 gap-6 w-full max-w-5xl">
+                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">👂</span> <span class="text-xl font-bold">On écoute</span></div>
+                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">🗣️</span> <span class="text-xl font-bold">On participe</span></div>
+                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">💬</span> <span class="text-xl font-bold">Dialogue ouvert</span></div>
+                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">❓</span> <span class="text-xl font-bold">On questionne</span></div>
+                <div class="col-span-2 bg-red-50 p-6 rounded-3xl flex justify-center items-center gap-6 shadow-md border-red-200 border-2">
+                    <span class="text-5xl">🎯</span> <span class="text-2xl font-bold text-red-500">Pas de cas personnel !</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. NUAGE DE MOTS -->
+        <div class="slide">
+            <h2 class="bubble-title">☁️ C'est quoi la violence ?</h2>
+            <div class="flex gap-4 w-full max-w-2xl mb-6 z-10">
+                <input type="text" id="wordInput" placeholder="Tapez un mot..." class="flex-1 p-4 rounded-full border-2 border-gray-300 text-xl focus:outline-none shadow-inner" onkeypress="if(event.key === 'Enter') addWord()">
+                <button onclick="addWord()" class="bg-blue-500 text-white px-8 rounded-full font-bold hover:bg-blue-600 transition shadow-lg">Ajouter</button>
+            </div>
+            <div id="cloud-container" class="w-full h-full border-4 border-dashed border-gray-200 rounded-[40px] p-8 flex flex-wrap justify-center items-center content-center bg-white relative">
+                <p class="text-gray-400 text-2xl opacity-30 absolute">Le nuage se forme ici...</p>
+            </div>
+            <script>
+                function addWord() {
+                    const input = document.getElementById('wordInput');
+                    const text = input.value.trim();
+                    if(text) {
+                        const span = document.createElement('span');
+                        span.textContent = text;
+                        span.style.color = ['#FF6B6B', '#4ECDC4', '#5f27cd'][Math.floor(Math.random()*3)];
+                        span.style.fontSize = (Math.floor(Math.random()*4)+2)+'rem';
+                        span.style.fontWeight = '800';
+                        span.style.transform = `rotate(${Math.floor(Math.random()*40)-20}deg)`;
+                        span.style.padding = '10px';
+                        document.getElementById('cloud-container').appendChild(span);
+                        input.value = '';
+                    }
+                }
+            </script>
+        </div>
+
+        <!-- 6. STATISTIQUES (COMPTEUR TEMPS RÉEL DEPUIS LANCEMENT) -->
+        <div class="slide">
+            <h2 class="bubble-title">📊 Les Chiffres 2024/2025</h2>
+            
+            <div class="flex flex-wrap justify-center items-center gap-10 mb-12">
+                <div class="stat-bubble w-60 h-60 bg-red-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer" onclick="openStat('1 Million', 'Enfants touchés', 'Soit 1 élève sur 10. Une classe par école.')">
+                    <span class="text-5xl font-bold text-red-500">1 M</span><span class="text-gray-700 font-bold">Victimes / an</span>
+                </div>
+                <div class="stat-bubble w-72 h-72 bg-blue-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer" onclick="openStat('Collège', 'Zone Rouge', 'C\'est là que le harcèlement explose (6.7%).')">
+                    <span class="text-6xl font-bold text-blue-500">Collège</span><span class="text-gray-700 font-bold">Le pic</span>
+                </div>
+                <div class="stat-bubble w-52 h-52 bg-green-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer" onclick="openStat('+20%', 'Cyber-harcèlement', 'Le danger continue à la maison sur le téléphone.')">
+                    <span class="text-5xl font-bold text-green-600">+20%</span><span class="text-gray-700 font-bold">En ligne</span>
+                </div>
+            </div>
+
+            <!-- COMPTEUR DYNAMIQUE (DÉMARRE À 0) -->
+            <div class="bg-gray-900 text-red-500 p-6 rounded-2xl border-4 border-red-500 shadow-2xl text-center w-full max-w-3xl">
+                <h3 class="text-white text-lg uppercase tracking-widest mb-2">Victimes depuis le début de cette intervention</h3>
+                <div id="liveCounter" class="text-7xl font-mono font-bold text-red-500">0</div>
+                <p class="text-gray-400 text-sm mt-2 font-mono italic">Il y a une nouvelle victime toutes les 50 secondes en France...</p>
+            </div>
+
+            <div id="statOverlay" class="stat-overlay">
+                <h2 id="ovTitle" class="text-9xl font-black text-blue-500 mb-6">TITRE</h2>
+                <h3 id="ovSubtitle" class="text-5xl text-gray-800 mb-10 font-bold">Sous-titre</h3>
+                <p id="ovText" class="text-4xl text-gray-600 max-w-5xl text-center">Texte...</p>
+                <button onclick="document.getElementById('statOverlay').classList.remove('visible')" class="mt-16 bg-red-500 text-white px-12 py-5 rounded-full text-2xl font-bold">FERMER</button>
+            </div>
+
+            <script>
+                function openStat(t,s,txt) { document.getElementById('ovTitle').innerText=t; document.getElementById('ovSubtitle').innerText=s; document.getElementById('ovText').innerText=txt; document.getElementById('statOverlay').classList.add('visible'); }
+                
+                // Compteur live (Démarre à 0, +1 toutes les ~50 secondes)
+                let sessionVictims = 0;
+                function updateCounter() {
+                    sessionVictims++;
+                    document.getElementById('liveCounter').innerText = sessionVictims;
+                }
+                // 1.2 victimes par minute = 1 toutes les 50000 ms
+                setInterval(updateCounter, 50000);
+            </script>
+        </div>
+
+        <!-- 7. LES 3 OUI (VERSION NÉON AU CLIC) -->
+        <div class="slide" style="background: #111;">
+            <h2 class="text-5xl text-white font-bold mb-12 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">✅ Les 3 OUI du Consentement</h2>
+            <p class="text-gray-400 mb-8 animate-pulse">Cliquez sur les panneaux pour les allumer</p>
+            
+            <div class="flex flex-col md:flex-row gap-8 w-full max-w-6xl justify-center items-center h-full pb-10 px-4">
+                
+                <!-- OUI 1 -->
+                <div class="neon-off neon-blue p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-blue p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                    <div class="text-6xl mb-6 icon">🧠</div>
+                    <h3 class="text-4xl mb-6 font-bold">INFORMÉ</h3>
+                    <p class="text-xl">Je sais exactement à quoi je dis oui. Pas de secrets.</p>
+                </div>
+
+                <!-- OUI 2 -->
+                <div class="neon-off neon-green p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-green p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                    <div class="text-6xl mb-6 icon">🗽</div>
+                    <h3 class="text-4xl mb-6 font-bold">LIBRE</h3>
+                    <p class="text-xl">Je ne suis pas forcé. Je peux changer d'avis.</p>
+                </div>
+
+                <!-- OUI 3 -->
+                <div class="neon-off neon-pink p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-pink p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                    <div class="text-6xl mb-6 icon">✨</div>
+                    <h3 class="text-4xl mb-6 font-bold">AUTHENTIQUE</h3>
+                    <p class="text-xl">Je le pense vraiment !</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 8. BAROMÈTRE DE LA VIOLENCE (VOTE TEMPS RÉEL) -->
+        <div class="slide">
+            <h2 class="bubble-title">🌡️ Baromètre de la violence</h2>
+            
+            <div class="w-full h-full flex flex-col p-2 max-w-7xl">
+                <!-- Situation -->
+                <div class="bg-white rounded-3xl p-4 mb-2 border-4 border-gray-100 flex flex-col items-center relative">
+                    <div class="flex w-full gap-4 mt-2">
+                        <input id="situationInput" type="text" placeholder="Situation..." class="flex-1 p-3 border-2 border-gray-200 rounded-xl text-lg">
+                        <button onclick="document.getElementById('displaySituationText').innerText = document.getElementById('situationInput').value" class="bg-gray-800 text-white px-6 rounded-xl font-bold">Afficher</button>
+                    </div>
+                    <h2 id="displaySituationText" class="text-4xl font-black text-center text-gray-800 py-2">...</h2>
+                </div>
+
+                <!-- Boutons de Vote avec Compteurs Live -->
+                <div class="flex justify-between items-stretch gap-2 mb-2 h-32">
+                    <div class="flex-1 flex flex-col gap-2">
+                         <div id="live-0" class="text-center font-bold text-2xl text-green-600 bg-white rounded-full py-1 border-2 border-green-200">0</div>
+                         <button onclick="vote(0)" class="flex-1 bg-green-100 rounded-2xl font-bold border-b-4 border-green-300 flex flex-col items-center justify-center hover:bg-green-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😊</span> Pas violent</button>
+                    </div>
+                    <div class="flex-1 flex flex-col gap-2">
+                         <div id="live-1" class="text-center font-bold text-2xl text-lime-600 bg-white rounded-full py-1 border-2 border-lime-200">0</div>
+                         <button onclick="vote(1)" class="flex-1 bg-lime-100 rounded-2xl font-bold border-b-4 border-lime-300 flex flex-col items-center justify-center hover:bg-lime-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😐</span> Peu violent</button>
+                    </div>
+                    <div class="flex-1 flex flex-col gap-2">
+                         <div id="live-2" class="text-center font-bold text-2xl text-yellow-600 bg-white rounded-full py-1 border-2 border-yellow-200">0</div>
+                         <button onclick="vote(2)" class="flex-1 bg-yellow-100 rounded-2xl font-bold border-b-4 border-yellow-300 flex flex-col items-center justify-center hover:bg-yellow-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😠</span> Violent</button>
+                    </div>
+                    <div class="flex-1 flex flex-col gap-2">
+                         <div id="live-3" class="text-center font-bold text-2xl text-orange-600 bg-white rounded-full py-1 border-2 border-orange-200">0</div>
+                         <button onclick="vote(3)" class="flex-1 bg-orange-100 rounded-2xl font-bold border-b-4 border-orange-300 flex flex-col items-center justify-center hover:bg-orange-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😡</span> Très violent</button>
+                    </div>
+                    <div class="flex-1 flex flex-col gap-2">
+                         <div id="live-4" class="text-center font-bold text-2xl text-red-600 bg-white rounded-full py-1 border-2 border-red-200">0</div>
+                         <button onclick="vote(4)" class="flex-1 bg-red-100 rounded-2xl font-bold border-b-4 border-red-300 flex flex-col items-center justify-center hover:bg-red-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">🤬</span> Trop violent</button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mb-2">
+                    <button onclick="saveSituation()" class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold shadow-lg hover:bg-blue-700 transition">💾 Enregistrer et Reset</button>
+                </div>
+
+                <!-- Résultats -->
+                <div class="flex-1 flex gap-4 overflow-hidden h-48">
+                    <div class="w-1/3 bg-white border-2 border-gray-100 rounded-3xl p-2 relative"><canvas id="barometerChart"></canvas></div>
+                    <div class="w-2/3 bg-white border-2 border-gray-100 rounded-3xl p-4 overflow-y-auto">
+                        <table class="w-full text-left"><tbody id="historyTable" class="text-lg"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                let currentVotes = [0, 0, 0, 0, 0];
+                const colors = ['#4ade80', '#bef264', '#facc15', '#fb923c', '#f87171'];
+                const labels = ["Pas violent", "Peu violent", "Violent", "Très violent", "Trop violent"];
+                let chartInstance = null;
+
+                setTimeout(() => {
+                    chartInstance = new Chart(document.getElementById('barometerChart'), {
+                        type: 'doughnut', data: { labels: labels, datasets: [{ data: [1,1,1,1,1], backgroundColor: colors }] },
+                        options: { maintainAspectRatio: false, plugins: { legend: {display:false} } }
+                    });
+                }, 500);
+
+                function vote(idx) {
+                    currentVotes[idx]++;
+                    document.getElementById(`live-${idx}`).innerText = currentVotes[idx]; // Update live counter
+                }
+
+                function saveSituation() {
+                    const sit = document.getElementById('displaySituationText').innerText;
+                    if(sit === "..." || sit === "") return;
+                    
+                    let max = -1, winner = 0;
+                    currentVotes.forEach((v,i) => { if(v>max){max=v; winner=i;} });
+                    
+                    // Add to table with COLORED numbers
+                    const row = `<tr class="border-b"><td class="py-2 font-bold">${sit}</td><td class="text-right font-bold" style="color:${colors[winner]}">${max} votes (${labels[winner]})</td></tr>`;
+                    document.getElementById('historyTable').innerHTML = row + document.getElementById('historyTable').innerHTML;
+                    
+                    // Update Chart
+                    chartInstance.data.datasets[0].data = currentVotes;
+                    chartInstance.update();
+
+                    // Reset
+                    currentVotes = [0,0,0,0,0];
+                    for(let i=0;i<5;i++) document.getElementById(`live-${i}`).innerText = "0";
+                    document.getElementById('situationInput').value = "";
+                }
+            </script>
+        </div>
+
+        <!-- 9. VIDÉO -->
+        <div class="slide">
+             <h2 class="bubble-title">📺 Vidéo</h2>
+             <div class="w-full max-w-5xl aspect-video bg-black rounded-[40px] overflow-hidden shadow-2xl border-8 border-gray-800">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/Ia5ijY5vVyk" frameborder="0" allowfullscreen></iframe>
+             </div>
+        </div>
+
+        <!-- 10. ARC EN CIEL (DÉTAILLÉ AVEC TEXTES COMPLETS) -->
+        <div class="slide">
+            <h2 class="bubble-title">🌈 L'Arc-en-ciel des possibles</h2>
+            <div class="scroll-y w-full px-4 pb-20">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                     <!-- Génération JS pour éviter la répétition -->
+                     <script>
+                         const situations = [
+                             { 
+                                 t:"Physique", i:"👕", 
+                                 sit:"Un groupe se moque de la tenue d'un élève dans la cour.", 
+                                 harc:"Critique les vêtements à voix haute et incite les autres à rire.", 
+                                 vic:"Baisse la tête, rougit et n'ose plus mettre ce vêtement.", 
+                                 tem:"Intervient : 'C'est juste un vêtement, on s'en fiche, arrêtez ça.'" 
+                             },
+                             { 
+                                 t:"Isolement", i:"🚫", 
+                                 sit:"Personne ne veut manger avec lui à la cantine.", 
+                                 harc:"Dit fort : 'Il est bizarre, ne l'approchez pas, on veut pas de lui.'", 
+                                 vic:"Mange seule dans son coin, triste et isolée.", 
+                                 tem:"Va s'asseoir à sa table pour manger avec lui et discuter." 
+                             },
+                             { 
+                                 t:"Rumeurs", i:"🤫", 
+                                 sit:"On raconte partout qu'elle a fait des choses graves.", 
+                                 harc:"Invente des détails gênants pour se rendre intéressant.", 
+                                 vic:"A honte de venir au collège, sent les regards sur elle.", 
+                                 tem:"Répond aux rumeurs : 'C'est faux, tu n'en sais rien, tais-toi.'" 
+                             },
+                             { 
+                                 t:"Cyber", i:"📱", 
+                                 sit:"Une photo humiliante est partagée sur un groupe Snap.", 
+                                 harc:"Diffuse la photo, demande des screens et se moque.", 
+                                 vic:"Ne veut plus sortir de sa chambre, a peur de revenir en cours.", 
+                                 tem:"Ne partage pas, ne like pas. Fait une capture d'écran et appelle le 3018." 
+                             },
+                             { 
+                                 t:"Pression", i:"😈", 
+                                 sit:"Un groupe force un élève à voler un truc au magasin.", 
+                                 harc:"Traite l'élève de 'poule mouillée' et menace de l'exclure s'il refuse.", 
+                                 vic:"Tremble, a peur des conséquences mais a peur du groupe.", 
+                                 tem:"Rappelle les risques : 'On va tous avoir des ennuis, ça vaut pas le coup, on part'." 
+                             },
+                             { 
+                                 t:"Critique", i:"📢", 
+                                 sit:"Moqueries méchantes quand il passe au tableau.", 
+                                 harc:"Imite sa voix, fait des bruits pour le déconcentrer.", 
+                                 vic:"Perd ses moyens, bafouille et n'arrive plus à parler.", 
+                                 tem:"Encourage à voix haute : 'Vas-y continue, on t'écoute nous !'." 
+                             }
+                         ];
+                         situations.forEach((s) => {
+                             document.write(`
+                                <div class="bg-white p-6 rounded-3xl border-2 border-gray-200 shadow hover:shadow-xl transition cursor-pointer" onclick="this.querySelector('.detail').classList.toggle('hidden')">
+                                    <div class="flex items-center gap-3 mb-4"><span class="text-4xl">${s.i}</span><h3 class="font-bold text-2xl text-gray-800">${s.t}</h3></div>
+                                    <p class="text-md font-semibold text-gray-600 mb-4 border-l-4 border-blue-400 pl-3">${s.sit}</p>
+                                    <div class="detail hidden space-y-3 text-sm bg-gray-50 p-4 rounded-xl">
+                                        <div class="text-red-600 border-l-2 border-red-200 pl-2"><strong>👿 Harceleur :</strong> ${s.harc}</div>
+                                        <div class="text-blue-600 border-l-2 border-blue-200 pl-2"><strong>😢 Victime :</strong> ${s.vic}</div>
+                                        <div class="text-green-700 bg-green-100 p-2 rounded border-l-4 border-green-500"><strong>🦸 Témoin Agit :</strong> ${s.tem}</div>
+                                    </div>
+                                    <p class="text-center text-xs text-gray-400 mt-2 detail font-bold">▼ Cliquez pour voir les rôles ▼</p>
+                                </div>
+                             `);
+                         });
+                     </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- 13. LE 3018 (ESPACÉ + CLIGNOTEMENT LENT) -->
+        <div class="slide">
+            <div class="marquee-container"><div class="marquee-content">INSULTES SUR INTERNET > 3018  •  PHOTOS VOLÉES > 3018  •  MENACES EN LIGNE > 3018  •  HARCÈLEMENT SCOLAIRE > 3018  •  RUMEURS > 3018</div></div>
+            
+            <h2 class="bubble-title mt-16">📞 Violences Numériques</h2>
+            <div class="bg-blue-600 text-white rounded-[50px] p-12 text-center shadow-2xl w-full max-w-4xl border-8 border-white relative flex flex-col items-center gap-8">
+                <div class="bg-white p-6 rounded-3xl shadow-lg inline-block">
+                   <img src="https://jeprotegemonenfant.gouv.fr/app/uploads/2021/11/Logo-3018.png" style="height: 100px;">
+                </div>
+                
+                <h3 class="text-5xl font-extrabold tracking-wide">Gratuit • Anonyme • Confidentiel</h3>
+                
+                <div class="bg-white text-blue-600 px-12 py-6 rounded-full font-bold text-3xl shadow-xl blink-slow inline-block border-8 border-yellow-400">
+                    ⚠️ INSTALLEZ L'APPLICATION 3018 !
+                </div>
+                
+                <p class="text-xl font-light opacity-90">Disponible sur iPhone et Android pour stocker les preuves.</p>
+            </div>
+        </div>
+
+        <!-- 14. LE 3928 (ESPACÉ + CLIGNOTEMENT LENT) -->
+        <div class="slide">
+            <div class="marquee-container" style="background:#333; color:white;"><div class="marquee-content">DISCRIMINATION RACIALE > 3928  •  REFUS DE SOIN > 3928  •  HANDICAP > 3928  •  ORIGINE > 3928  •  APPARENCE > 3928</div></div>
+
+            <h2 class="bubble-title mt-16" style="background: #374151;">⚖️ Discriminations</h2>
+            <div class="bg-gray-800 text-white rounded-[50px] p-12 text-center shadow-2xl w-full max-w-4xl border-8 border-white flex flex-col items-center gap-8">
+                 <div class="bg-white p-6 rounded-3xl shadow-lg inline-block">
+                    <img src="https://www.antidiscriminations.fr/sites/default/files/2021-02/logo-antidiscriminations-3928.png" style="height: 100px;">
+                 </div>
+                 
+                <h3 class="text-5xl font-extrabold tracking-wide">Contre toutes les discriminations</h3>
+                
+                <div class="bg-white text-gray-800 px-12 py-6 rounded-full font-bold text-3xl shadow-xl blink-slow inline-block border-8 border-blue-400">
+                     🛡️ C'EST L'ÉTAT QUI TE PROTÈGE
+                </div>
+                
+                <p class="text-xl font-light opacity-90">Racisme, Handicap, Apparence, Origine, Religion...</p>
+            </div>
+        </div>
+
+        <!-- 15. QUIZ -->
+        <div class="slide">
+            <h2 class="bubble-title">❓ Le Quiz Final</h2>
+            <div id="quiz-container" class="w-full max-w-4xl bg-white p-10 rounded-[40px] shadow-2xl"></div>
+            <script>
+                const quizData=[{q:"Combien d'élèves victimes ?",o:["100k","500k","1 Million"],c:2},{q:"Le 3018 c'est pour ?",o:["Pizza","Violences","Devoirs"],c:1},{q:"Quel OUI est valide ?",o:["Forcé","Hésitant","Libre"],c:2}];
+                let qIdx=0;
+                function loadQ(){
+                    const d=quizData[qIdx];
+                    document.getElementById('quiz-container').innerHTML=`<h3 class='text-3xl font-bold mb-6'>${d.q}</h3><div class='grid gap-4'>${d.o.map((x,i)=>`<button onclick='chk(${i},${d.c},this)' class='bg-gray-100 p-4 rounded-xl text-xl hover:bg-blue-100'>${x}</button>`).join('')}</div>`;
+                }
+                function chk(s,c,b){
+                    if(s===c){ b.style.background="#4ade80"; setTimeout(()=>{if(++qIdx<quizData.length)loadQ(); else document.getElementById('quiz-container').innerHTML="<h1 class='text-6xl'>🏆 BRAVO !</h1>"},1000);}
+                    else{ b.style.background="#f87171"; }
+                }
+                loadQ();
+            </script>
+        </div>
+
+        <!-- 16. FIN -->
+        <div class="slide">
+            <h2 class="text-7xl font-bold text-gray-800 mb-8">Merci ! 🙏</h2>
+            <button onclick="location.reload()" class="bg-blue-600 text-white px-12 py-5 rounded-full font-bold text-2xl shadow-xl hover:scale-110 transition">Recommencer</button>
+        </div>
+
+    </div>
+
+    <script>
+        let cSlide=0; const slides=document.querySelectorAll('.slide');
+        function upS(){ slides.forEach((s,i)=>{ s.classList.remove('active','prev'); if(i===cSlide)s.classList.add('active'); else if(i<cSlide)s.classList.add('prev'); }); }
+        function changeSlide(d){ const n=cSlide+d; if(n>=0&&n<slides.length){ cSlide=n; upS(); } }
+        document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight')changeSlide(1); if(e.key==='ArrowLeft')changeSlide(-1); });
+    </script>
+</body>
+</html>
