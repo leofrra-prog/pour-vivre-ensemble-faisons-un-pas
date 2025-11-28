@@ -64,43 +64,49 @@
         .nav-prev { left: 20px; } .nav-next { right: 20px; }
 
         /* --- Effet NÉON (Slide 7) --- */
-        /* État éteint */
+        /* État éteint (Fantôme) */
         .neon-off {
-            background: #222;
-            border: 4px solid #444;
-            color: #555;
+            background: #000;
+            border: 2px solid #333;
+            color: #222; /* Texte quasi invisible */
             box-shadow: none;
             cursor: pointer;
-            transition: all 0.5s ease;
+            transition: border-color 0.3s;
         }
-        .neon-off .icon { filter: grayscale(100%) brightness(0.5); opacity: 0.5; }
-        .neon-off h3, .neon-off p { opacity: 0.3; }
+        .neon-off .icon { opacity: 0; }
+        .neon-off h3, .neon-off p { opacity: 0; }
+        .neon-off:hover { border-color: #555; }
 
         /* État allumé */
         .neon-on {
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             border-color: #fff;
             color: #fff;
             transform: scale(1.05);
+            /* Animation d'allumage */
+            animation: turnOn 1.5s ease-out forwards;
         }
-        .neon-on .icon { filter: none; opacity: 1; text-shadow: 0 0 20px currentColor; }
-        .neon-on h3 { opacity: 1; text-shadow: 0 0 10px currentColor; animation: flicker 2s infinite alternate; }
+        
+        @keyframes turnOn {
+            0% { opacity: 0.5; }
+            10% { opacity: 0.1; }
+            20% { opacity: 0.8; }
+            30% { opacity: 0.2; }
+            40% { opacity: 1; box-shadow: 0 0 30px currentColor; }
+            50% { opacity: 0.4; box-shadow: none; }
+            60% { opacity: 1; box-shadow: 0 0 30px currentColor; }
+            70% { opacity: 0.7; }
+            80% { opacity: 1; box-shadow: 0 0 40px currentColor; }
+            100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
+        }
+
+        .neon-on .icon { opacity: 1; text-shadow: 0 0 20px currentColor; }
+        .neon-on h3 { opacity: 1; text-shadow: 0 0 10px currentColor; }
         .neon-on p { opacity: 1; }
         
-        /* Couleurs Néon Spécifiques */
-        .neon-blue.neon-on { box-shadow: 0 0 20px #00eaff, inset 0 0 20px #00eaff; border-color: #00eaff; }
-        .neon-blue.neon-on h3 { color: #00eaff; }
-        
-        .neon-green.neon-on { box-shadow: 0 0 20px #00ff00, inset 0 0 20px #00ff00; border-color: #00ff00; }
-        .neon-green.neon-on h3 { color: #00ff00; }
-        
-        .neon-pink.neon-on { box-shadow: 0 0 20px #ff00de, inset 0 0 20px #ff00de; border-color: #ff00de; }
-        .neon-pink.neon-on h3 { color: #ff00de; }
-
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.7; }
-        }
+        .neon-blue.neon-on { color: #00eaff; border-color: #00eaff; }
+        .neon-green.neon-on { color: #00ff00; border-color: #00ff00; }
+        .neon-pink.neon-on { color: #ff00de; border-color: #ff00de; }
 
         /* --- Banderole Défilante --- */
         .marquee-container {
@@ -287,10 +293,10 @@
             </script>
         </div>
 
-        <!-- 7. LES 3 OUI (VERSION NÉON AU CLIC) -->
-        <div class="slide" style="background: #111;">
+        <!-- 7. LES 3 OUI (VERSION NÉON ALLUMAGE) -->
+        <div class="slide" style="background: #000;">
             <h2 class="text-5xl text-white font-bold mb-12 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">✅ Les 3 OUI du Consentement</h2>
-            <p class="text-gray-400 mb-8 animate-pulse">Cliquez sur les panneaux pour les allumer</p>
+            <p class="text-gray-400 mb-8 animate-pulse text-center">Cliquez sur les panneaux pour les allumer</p>
             
             <div class="flex flex-col md:flex-row gap-8 w-full max-w-6xl justify-center items-center h-full pb-10 px-4">
                 
@@ -318,7 +324,7 @@
             </div>
         </div>
 
-        <!-- 8. BAROMÈTRE DE LA VIOLENCE (VOTE TEMPS RÉEL) -->
+        <!-- 8. BAROMÈTRE DE LA VIOLENCE (TABLEAU COMPARATIF COMPLET) -->
         <div class="slide">
             <h2 class="bubble-title">🌡️ Baromètre de la violence</h2>
             
@@ -357,14 +363,28 @@
                 </div>
 
                 <div class="flex justify-center mb-2">
-                    <button onclick="saveSituation()" class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold shadow-lg hover:bg-blue-700 transition">💾 Enregistrer et Reset</button>
+                    <button onclick="saveSituation()" class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold shadow-lg hover:bg-blue-700 transition">💾 Enregistrer et Comparer</button>
                 </div>
 
-                <!-- Résultats -->
+                <!-- Résultats TABLEAU COMPARATIF COMPLET -->
                 <div class="flex-1 flex gap-4 overflow-hidden h-48">
                     <div class="w-1/3 bg-white border-2 border-gray-100 rounded-3xl p-2 relative"><canvas id="barometerChart"></canvas></div>
                     <div class="w-2/3 bg-white border-2 border-gray-100 rounded-3xl p-4 overflow-y-auto">
-                        <table class="w-full text-left"><tbody id="historyTable" class="text-lg"></tbody></table>
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 border-b">
+                                <tr class="text-sm">
+                                    <th class="p-2">Situation</th>
+                                    <th class="p-2 text-center text-green-600">😊</th>
+                                    <th class="p-2 text-center text-lime-600">😐</th>
+                                    <th class="p-2 text-center text-yellow-600">😠</th>
+                                    <th class="p-2 text-center text-orange-600">😡</th>
+                                    <th class="p-2 text-center text-red-600">🤬</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTable" class="text-sm">
+                                <!-- Lignes ajoutées ici -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -391,11 +411,16 @@
                     const sit = document.getElementById('displaySituationText').innerText;
                     if(sit === "..." || sit === "") return;
                     
-                    let max = -1, winner = 0;
-                    currentVotes.forEach((v,i) => { if(v>max){max=v; winner=i;} });
-                    
-                    // Add to table with COLORED numbers
-                    const row = `<tr class="border-b"><td class="py-2 font-bold">${sit}</td><td class="text-right font-bold" style="color:${colors[winner]}">${max} votes (${labels[winner]})</td></tr>`;
+                    // Add to table with ALL columns
+                    const row = `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-2 font-bold px-2">${sit}</td>
+                            <td class="text-center font-bold text-green-600">${currentVotes[0]}</td>
+                            <td class="text-center font-bold text-lime-600">${currentVotes[1]}</td>
+                            <td class="text-center font-bold text-yellow-600">${currentVotes[2]}</td>
+                            <td class="text-center font-bold text-orange-600">${currentVotes[3]}</td>
+                            <td class="text-center font-bold text-red-600">${currentVotes[4]}</td>
+                        </tr>`;
                     document.getElementById('historyTable').innerHTML = row + document.getElementById('historyTable').innerHTML;
                     
                     // Update Chart
@@ -488,60 +513,88 @@
             </div>
         </div>
 
-        <!-- 13. LE 3018 (ESPACÉ + CLIGNOTEMENT LENT) -->
+        <!-- 13. LE 3018 (EXPLICATIONS AJOUTÉES) -->
         <div class="slide">
             <div class="marquee-container"><div class="marquee-content">INSULTES SUR INTERNET > 3018  •  PHOTOS VOLÉES > 3018  •  MENACES EN LIGNE > 3018  •  HARCÈLEMENT SCOLAIRE > 3018  •  RUMEURS > 3018</div></div>
             
             <h2 class="bubble-title mt-16">📞 Violences Numériques</h2>
-            <div class="bg-blue-600 text-white rounded-[50px] p-12 text-center shadow-2xl w-full max-w-4xl border-8 border-white relative flex flex-col items-center gap-8">
+            <div class="bg-blue-600 text-white rounded-[50px] p-8 text-center shadow-2xl w-full max-w-5xl border-8 border-white relative flex flex-col items-center gap-6">
                 <div class="bg-white p-6 rounded-3xl shadow-lg inline-block">
                    <img src="https://jeprotegemonenfant.gouv.fr/app/uploads/2021/11/Logo-3018.png" style="height: 100px;">
                 </div>
                 
                 <h3 class="text-5xl font-extrabold tracking-wide">Gratuit • Anonyme • Confidentiel</h3>
                 
+                <p class="text-lg bg-blue-700 p-4 rounded-2xl max-w-2xl leading-relaxed">
+                    Le 3018 est le numéro national pour les jeunes victimes de violences numériques et de harcèlement scolaire.
+                    <br>Des professionnels (psychologues, juristes) t'écoutent et t'aident à faire retirer des contenus (photos, vidéos, commentaires) des réseaux sociaux en quelques heures.
+                </p>
+
                 <div class="bg-white text-blue-600 px-12 py-6 rounded-full font-bold text-3xl shadow-xl blink-slow inline-block border-8 border-yellow-400">
                     ⚠️ INSTALLEZ L'APPLICATION 3018 !
                 </div>
                 
-                <p class="text-xl font-light opacity-90">Disponible sur iPhone et Android pour stocker les preuves.</p>
+                <p class="text-sm italic opacity-80">L'application permet de stocker les preuves (captures d'écran) dans un coffre-fort numérique sécurisé.</p>
             </div>
         </div>
 
-        <!-- 14. LE 3928 (ESPACÉ + CLIGNOTEMENT LENT) -->
+        <!-- 14. LE 3928 (EXPLICATIONS AJOUTÉES) -->
         <div class="slide">
             <div class="marquee-container" style="background:#333; color:white;"><div class="marquee-content">DISCRIMINATION RACIALE > 3928  •  REFUS DE SOIN > 3928  •  HANDICAP > 3928  •  ORIGINE > 3928  •  APPARENCE > 3928</div></div>
 
             <h2 class="bubble-title mt-16" style="background: #374151;">⚖️ Discriminations</h2>
-            <div class="bg-gray-800 text-white rounded-[50px] p-12 text-center shadow-2xl w-full max-w-4xl border-8 border-white flex flex-col items-center gap-8">
+            <div class="bg-gray-800 text-white rounded-[50px] p-8 text-center shadow-2xl w-full max-w-5xl border-8 border-white flex flex-col items-center gap-6">
                  <div class="bg-white p-6 rounded-3xl shadow-lg inline-block">
                     <img src="https://www.antidiscriminations.fr/sites/default/files/2021-02/logo-antidiscriminations-3928.png" style="height: 100px;">
                  </div>
                  
                 <h3 class="text-5xl font-extrabold tracking-wide">Contre toutes les discriminations</h3>
                 
+                <p class="text-lg bg-gray-700 p-4 rounded-2xl max-w-2xl leading-relaxed">
+                    Si tu es traité différemment ou rejeté à cause de ton origine, ta couleur de peau, ton handicap, ton sexe ou ta religion, c'est interdit par la loi.
+                    <br>Ce numéro te met en lien avec des juristes du Défenseur des Droits qui vont faire respecter tes droits.
+                </p>
+
                 <div class="bg-white text-gray-800 px-12 py-6 rounded-full font-bold text-3xl shadow-xl blink-slow inline-block border-8 border-blue-400">
                      🛡️ C'EST L'ÉTAT QUI TE PROTÈGE
                 </div>
-                
-                <p class="text-xl font-light opacity-90">Racisme, Handicap, Apparence, Origine, Religion...</p>
             </div>
         </div>
 
-        <!-- 15. QUIZ -->
+        <!-- 15. QUIZ ÉTENDU -->
         <div class="slide">
             <h2 class="bubble-title">❓ Le Quiz Final</h2>
-            <div id="quiz-container" class="w-full max-w-4xl bg-white p-10 rounded-[40px] shadow-2xl"></div>
+            <div id="quiz-container" class="w-full max-w-4xl bg-white p-10 rounded-[40px] shadow-2xl border-4 border-blue-50"></div>
             <script>
-                const quizData=[{q:"Combien d'élèves victimes ?",o:["100k","500k","1 Million"],c:2},{q:"Le 3018 c'est pour ?",o:["Pizza","Violences","Devoirs"],c:1},{q:"Quel OUI est valide ?",o:["Forcé","Hésitant","Libre"],c:2}];
+                const quizData=[
+                    {q:"Combien d'élèves sont victimes de harcèlement chaque année ?",o:["100 000","500 000","1 Million"],c:2},
+                    {q:"Le numéro 3018 permet de...",o:["Faire ses devoirs","Supprimer des photos/vidéos en ligne","Commander une pizza"],c:1},
+                    {q:"Quel est le seul OUI valide pour le consentement ?",o:["Le 'Oui' sous la pression","Le 'Oui' hésitant","Le 'Oui' libre et enthousiaste"],c:2},
+                    {q:"Que doit faire un témoin de harcèlement ?",o:["Rien, ce n'est pas son problème","Filmer la scène pour mettre sur Snap","Aller chercher un adulte ou intervenir"],c:2},
+                    {q:"Laquelle de ces situations est une discrimination punie par la loi ?",o:["Ne pas aimer les épinards","Refuser l'entrée à quelqu'un à cause de sa couleur de peau","Avoir une mauvaise note"],c:1},
+                    {q:"Le cyber-harcèlement s'arrête-t-il après l'école ?",o:["Oui, c'est fini à 17h","Non, ça continue sur le téléphone à la maison","Seulement le week-end"],c:1},
+                    {q:"L'isolement (mettre quelqu'un à l'écart), c'est...",o:["Une forme de violence","Juste un jeu","Pas grave"],c:0}
+                ];
                 let qIdx=0;
                 function loadQ(){
                     const d=quizData[qIdx];
-                    document.getElementById('quiz-container').innerHTML=`<h3 class='text-3xl font-bold mb-6'>${d.q}</h3><div class='grid gap-4'>${d.o.map((x,i)=>`<button onclick='chk(${i},${d.c},this)' class='bg-gray-100 p-4 rounded-xl text-xl hover:bg-blue-100'>${x}</button>`).join('')}</div>`;
+                    document.getElementById('quiz-container').innerHTML=`
+                        <h3 class='text-3xl font-bold mb-6'>Question ${qIdx+1}/${quizData.length}</h3>
+                        <p class='text-2xl mb-8 font-semibold'>${d.q}</p>
+                        <div class='grid gap-4'>${d.o.map((x,i)=>`<button onclick='chk(${i},${d.c},this)' class='bg-gray-100 p-4 rounded-xl text-xl hover:bg-blue-100 border-2 border-transparent transition'>${x}</button>`).join('')}</div>
+                    `;
                 }
                 function chk(s,c,b){
-                    if(s===c){ b.style.background="#4ade80"; setTimeout(()=>{if(++qIdx<quizData.length)loadQ(); else document.getElementById('quiz-container').innerHTML="<h1 class='text-6xl'>🏆 BRAVO !</h1>"},1000);}
-                    else{ b.style.background="#f87171"; }
+                    const btns = document.querySelectorAll('#quiz-container button');
+                    btns.forEach(btn => btn.disabled = true);
+                    
+                    if(s===c){ 
+                        b.style.background="#4ade80"; b.style.borderColor="#22c55e"; b.style.color="white";
+                        setTimeout(()=>{if(++qIdx<quizData.length)loadQ(); else document.getElementById('quiz-container').innerHTML="<div class='flex flex-col items-center'><div class='text-9xl mb-4 animate-bounce'>🏆</div><h1 class='text-6xl font-bold text-green-600'>BRAVO !</h1><p class='text-2xl mt-4'>Tu es un expert du vivre ensemble !</p></div>"},1200);
+                    } else { 
+                        b.style.background="#f87171"; b.style.borderColor="#ef4444"; b.style.color="white";
+                        setTimeout(() => btns.forEach(btn => btn.disabled = false), 1000);
+                    }
                 }
                 loadQ();
             </script>
@@ -550,6 +603,7 @@
         <!-- 16. FIN -->
         <div class="slide">
             <h2 class="text-7xl font-bold text-gray-800 mb-8">Merci ! 🙏</h2>
+            <div class="text-9xl animate-bounce mb-8">👋</div>
             <button onclick="location.reload()" class="bg-blue-600 text-white px-12 py-5 rounded-full font-bold text-2xl shadow-xl hover:scale-110 transition">Recommencer</button>
         </div>
 
