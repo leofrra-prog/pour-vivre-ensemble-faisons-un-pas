@@ -3,537 +3,662 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Préjugés, quand tu nous tiens</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Monoton&display=swap" rel="stylesheet">
-    
+    <title>Pour vivre ensemble, faisons un pas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            /* Palette PASTEL DOUCE (Style Préjugés) */
+            --bg: #FDFBF7;
+            --p-blue: #A2D2FF;
+            --p-blue-dark: #80b3e6;
+            --p-pink: #FFC8DD;
+            --p-pink-dark: #e6aac1;
+            --p-green: #BDE0FE;
+            --p-mint: #Caffbf;
+            --p-mint-dark: #a8e69a;
+            --p-yellow: #FDFFB6;
+            --p-purple: #CDB4DB;
+            --text: #555;
+            --shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            overflow: hidden;
+            font-family: 'Nunito', sans-serif;
             margin: 0; padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh; width: 100vw;
         }
 
-        /* --- Fond Animé (Palette Pastel "Préjugés") --- */
-        .bg-animated {
-            background: linear-gradient(-45deg, #A2D2FF, #FFC8DD, #CDB4DB, #BDE0FE);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            opacity: 0.5;
-        }
-        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        /* --- BACKGROUND DECORATION --- */
+        .deco-shape { position: absolute; z-index: -1; opacity: 0.6; filter: blur(40px); animation: float 10s infinite ease-in-out; }
+        .ds-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: var(--p-pink); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+        .ds-2 { bottom: -10%; right: -10%; width: 600px; height: 600px; background: var(--p-blue); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation-delay: -5s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(20px, -20px); } }
 
-        /* --- Slides --- */
-        .slide-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .slide {
-            position: absolute; width: 95%; height: 95%; opacity: 0;
-            transform: scale(0.8) translateX(100px);
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: none; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(255, 255, 255, 0.95); border-radius: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); padding: 1rem;
-            backdrop-filter: blur(10px); border: 4px solid white; overflow: hidden;
-        }
-        .slide.active { opacity: 1; transform: scale(1) translateX(0); pointer-events: all; z-index: 10; }
-        .slide.prev { transform: scale(0.8) translateX(-100px); opacity: 0; }
-
-        /* --- Titres --- */
-        .bubble-title {
-            background: #CDB4DB; color: white; padding: 0.8rem 2.5rem;
-            border-radius: 50px; box-shadow: 0 8px 0 #a29bfe; margin-bottom: 1.5rem;
-            text-align: center; animation: float 6s ease-in-out infinite;
-            font-size: 2rem; font-weight: 800; letter-spacing: 1px; z-index: 20;
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        /* --- Navigation --- */
-        .nav-arrow {
+        /* --- NAVIGATION --- */
+        .nav-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
-            background: white; width: 60px; height: 60px; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: all 0.3s; z-index: 50;
-            font-size: 2rem; color: #333; user-select: none;
+            background: white; color: var(--text); border: none;
+            width: 60px; height: 60px; border-radius: 50%;
+            font-size: 24px; cursor: pointer; z-index: 1000;
+            box-shadow: var(--shadow); transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
         }
-        .nav-arrow:hover { transform: translateY(-50%) scale(1.15); background: #A2D2FF; color: white; }
-        .nav-prev { left: 20px; } .nav-next { right: 20px; }
+        .nav-btn:hover { background: var(--p-purple); color: white; transform: translateY(-50%) scale(1.1); }
+        #prev-btn { left: 30px; }
+        #next-btn { right: 30px; }
 
-        /* --- Effet NÉON (Slide 7) --- */
+        .reset-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: #ffadad; color: white; border: none; padding: 8px 20px;
+            border-radius: 20px; cursor: pointer; font-weight: bold; z-index: 1000;
+            box-shadow: var(--shadow); transition: transform 0.2s;
+        }
+        .reset-btn:hover { transform: scale(1.05); }
+
+        /* --- SLIDE CONTAINER --- */
+        .slide {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+            padding: 20px; box-sizing: border-box;
+        }
+        .slide.active { opacity: 1; pointer-events: all; z-index: 10; }
+
+        h1 { font-family: 'Fredoka', sans-serif; font-size: 3.5rem; color: #777; margin-bottom: 20px; text-align: center; }
+        p { font-size: 1.2rem; max-width: 800px; text-align: center; line-height: 1.6; }
+
+        /* --- SLIDE 1: INTRO --- */
+        .intro-frame {
+            background: white; padding: 15px; border-radius: 20px;
+            box-shadow: var(--shadow); transform: rotate(-3deg);
+            margin-top: 40px; display: inline-block;
+        }
+        .intro-frame img { height: 150px; border-radius: 10px; display: block; }
+        .art-shapes { display: flex; gap: 40px; margin-top: 50px; align-items: center; }
+        .art-circle { width: 100px; height: 100px; border-radius: 50%; background: var(--p-blue); display:flex; align-items:center; justify-content:center; font-size:2rem; color:white; box-shadow: var(--shadow); animation: bounce 3s infinite; }
+        .art-square { width: 100px; height: 100px; border-radius: 20px; background: var(--p-mint); transform: rotate(15deg); display:flex; align-items:center; justify-content:center; font-size:2rem; color:white; box-shadow: var(--shadow); animation: bounce 3s infinite 0.5s; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* --- RÈGLES (Slide 2 -> Mini) --- */
+        #rules-container {
+            position: fixed;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 2000;
+            display: flex; flex-direction: column; gap: 15px; align-items: center;
+        }
+
+        /* État Centré (Slide 2) */
+        .rules-center {
+            top: 55%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; max-width: 600px;
+        }
+        .rules-center .rule-bubble { padding: 20px 40px; font-size: 1.5rem; width: 100%; text-align: center;}
+
+        /* État Mini (Slide 3+) */
+        .rules-mini {
+            top: 20px; left: 20px; transform: translate(0, 0) scale(0.6);
+            transform-origin: top left;
+            flex-direction: row; flex-wrap: wrap; width: 400px;
+        }
+        .rules-mini .rule-bubble { padding: 10px 20px; font-size: 1.2rem; }
+        
+        /* État Caché (Slide 1) */
+        .rules-hidden { display: none !important; }
+
+        .rule-bubble {
+            background: white; border-radius: 50px; font-weight: bold; color: var(--text);
+            box-shadow: var(--shadow); cursor: pointer; border-left: 8px solid var(--p-blue);
+            animation: pulse 3s infinite ease-in-out;
+        }
+        .rule-bubble:nth-child(2) { border-color: var(--p-pink); animation-delay: 0.5s; }
+        .rule-bubble:nth-child(3) { border-color: var(--p-mint); animation-delay: 1s; }
+        .rule-bubble:nth-child(4) { border-color: var(--p-purple); animation-delay: 1.5s; }
+        .rule-bubble:nth-child(5) { border-color: var(--p-yellow); animation-delay: 2s; }
+
+        /* --- SLIDE 3: ICEBREAKER --- */
+        .ib-container { display: flex; gap: 30px; margin-top: 50px; }
+        .ib-item {
+            width: 160px; height: 160px; border-radius: 50%;
+            background: white; box-shadow: var(--shadow);
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            font-weight: 700; color: #666; padding: 10px;
+            transition: 0.4s; cursor: pointer; border: 4px solid white;
+        }
+        .ib-item:hover { transform: translateY(-20px) scale(1.1); border-color: var(--p-purple); }
+
+        /* --- SLIDE 4: LEO LAGRANGE (Phrases) --- */
+        .leo-frame {
+            background: white; padding: 40px; border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            max-width: 1000px; display: flex; gap: 40px; position: relative;
+        }
+        .leo-frame::before { content:''; position: absolute; top:-15px; left:-15px; width:100%; height:100%; border: 3px dashed var(--p-blue); border-radius: 30px; z-index:-1; }
+        .leo-col { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+        .leo-col h2 { color: var(--p-blue-dark); border-bottom: 2px solid var(--p-yellow); padding-bottom: 10px; margin: 0; }
+        .leo-text { font-size: 1.1rem; text-align: justify; }
+        .leo-highlight { background: var(--p-yellow); padding: 0 5px; border-radius: 5px; font-weight: bold; }
+        .leo-img-box { text-align: center; margin-top: auto; }
+        .leo-img-box img { width: 100px; border-radius: 50%; border: 5px solid var(--p-pink); }
+
+        /* --- SLIDE 5: NUAGE DE MOTS (C'est quoi la violence) --- */
+        #cloud-canvas {
+            width: 800px; height: 500px; background: white; border-radius: 30px;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.05); border: 2px solid var(--p-blue);
+            position: relative; margin-top: 20px; overflow: hidden;
+        }
+        .cloud-item { position: absolute; font-weight: bold; animation: pop 0.5s; padding: 5px; white-space: nowrap; }
+        @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+        #word-input { padding: 10px 20px; border-radius: 20px; border: 2px solid var(--p-purple); width: 300px; font-size: 1.1rem; text-align: center; outline: none; }
+
+        /* --- SLIDE 6: CERCLES (Delay) --- */
+        .circles-zone { position: relative; width: 600px; height: 600px; display: flex; justify-content: center; align-items: center; }
+        .c-item {
+            position: absolute; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--shadow); cursor: progress; /* Indicate delay */
+            flex-direction: column; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .c-region { width: 550px; height: 550px; background: radial-gradient(circle, #e3f2fd 30%, var(--p-blue) 100%); z-index: 1; color: #1565c0; }
+        .c-dept { width: 380px; height: 380px; background: radial-gradient(circle, #ffebee 30%, var(--p-pink) 100%); z-index: 2; color: #c62828; }
+        .c-ville { width: 220px; height: 220px; background: radial-gradient(circle, #fffde7 30%, var(--p-yellow) 100%); z-index: 3; color: #f9a825; }
+        
+        .c-label { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .c-details {
+            opacity: 0; transform: scale(0.8); transition: 0.4s;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; pointer-events: none;
+        }
+        .tag { background: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-weight: bold; }
+
+        /* La classe ajoutée par JS après 2 secondes */
+        .c-item.expanded { width: 650px; height: 650px; z-index: 100; box-shadow: 0 30px 60px rgba(0,0,0,0.2); cursor: default; }
+        .c-item.expanded .c-label { transform: translateY(-50px); font-size: 2rem; }
+        .c-item.expanded .c-details { opacity: 1; transform: scale(1); }
+
+        /* --- SLIDE 7: STATS (Violence) --- */
+        .stats-row { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; margin-top: 30px; }
+        .stat-circle {
+            width: 200px; height: 200px; border-radius: 50%;
+            background: white; border: 5px solid;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 15px; box-shadow: var(--shadow);
+            transition: transform 0.4s;
+        }
+        .stat-circle:hover { transform: scale(1.2); z-index: 10; background: #fff; }
+        .s-val { font-size: 2.5rem; font-weight: 900; margin-bottom: 5px; }
+        .s-label { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+        .s-comment { font-size: 0.85rem; font-style: italic; }
+
+        /* --- SLIDE 8: NÉONS (Les 3 OUI) --- */
+        /* État éteint */
         .neon-off {
-            background: #000;
-            border: 2px solid #333;
-            color: #222;
-            box-shadow: none;
-            cursor: pointer;
-            transition: border-color 0.3s;
+            background: #000; border: 2px solid #333; color: #222;
+            box-shadow: none; cursor: pointer; transition: border-color 0.3s;
         }
         .neon-off .icon { opacity: 0; }
         .neon-off h3, .neon-off p { opacity: 0; }
         .neon-off:hover { border-color: #555; }
 
+        /* État allumé */
         .neon-on {
-            background: rgba(0,0,0,0.95);
-            border-color: #fff;
-            color: #fff;
-            transform: scale(1.05);
-            animation: turnOn 1.5s ease-out forwards;
+            background: rgba(0,0,0,0.95); border-color: #fff; color: #fff;
+            transform: scale(1.05); animation: turnOn 1.5s ease-out forwards;
         }
-        
         @keyframes turnOn {
-            0% { opacity: 0.5; } 10% { opacity: 0.1; } 20% { opacity: 0.8; } 30% { opacity: 0.2; }
-            40% { opacity: 1; box-shadow: 0 0 30px currentColor; } 50% { opacity: 0.4; box-shadow: none; }
-            60% { opacity: 1; box-shadow: 0 0 30px currentColor; } 70% { opacity: 0.7; }
-            80% { opacity: 1; box-shadow: 0 0 40px currentColor; } 100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
+            0% { opacity: 0.5; } 20% { opacity: 0.8; } 40% { opacity: 1; box-shadow: 0 0 30px currentColor; } 
+            60% { opacity: 1; box-shadow: 0 0 30px currentColor; } 80% { opacity: 1; box-shadow: 0 0 40px currentColor; } 100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
         }
-
         .neon-on .icon { opacity: 1; text-shadow: 0 0 20px currentColor; }
         .neon-on h3 { opacity: 1; text-shadow: 0 0 10px currentColor; }
-        .neon-on p { opacity: 1; }
         
         .neon-blue.neon-on { color: #A2D2FF; border-color: #A2D2FF; }
-        .neon-green.neon-on { color: #FDFFB6; border-color: #FDFFB6; color: #333; text-shadow: 0 0 10px #fff; } 
+        .neon-green.neon-on { color: #Caffbf; border-color: #Caffbf; }
         .neon-pink.neon-on { color: #FFC8DD; border-color: #FFC8DD; }
 
-        /* --- Scrollbar masquée --- */
-        .scroll-y { overflow-y: auto; max-height: 100%; width: 100%; }
-        .scroll-y::-webkit-scrollbar { display: none; }
-        
-        /* --- Overlay Stats --- */
-        .stat-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.98);
-            z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 2rem; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        /* --- SLIDE 10: ARC EN CIEL (Flip Cards Style) --- */
+        .courage-container { display: flex; width: 95%; height: 85%; gap: 20px; }
+        .game-zone {
+            flex: 2; position: relative; background: white; border-radius: 30px; border: 4px solid #eee;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.05); perspective: 1000px;
         }
-        .stat-overlay.visible { opacity: 1; pointer-events: all; }
+        .situations-list { flex: 0.5; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 10px; }
+        .sit-btn {
+            background: white; padding: 15px; border-radius: 15px; font-weight: bold;
+            cursor: pointer; border-left: 5px solid var(--p-purple); box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+            transition: 0.3s; text-align: center;
+        }
+        .sit-btn:hover { background: var(--p-purple); color: white; transform: translateX(-5px); }
+        
+        /* La carte animée */
+        .flippable-card {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 450px; height: 300px;
+            transform-style: preserve-3d; transition: transform 0.8s;
+            display: none; 
+        }
+        .flippable-card.do-flip { transform: translate(-50%, -50%) rotateY(180deg); }
+        
+        .fc-front, .fc-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2); font-size: 1.2rem; text-align: center; padding: 20px; box-sizing: border-box;
+        }
+        .fc-front { background: var(--p-blue); color: white; font-weight: 900; font-size: 2rem; border: 5px solid white; flex-direction: column; }
+        .fc-back { background: white; color: #333; transform: rotateY(180deg); border: 5px solid var(--p-blue); flex-direction: column; justify-content: space-around; }
+
+        /* --- SLIDE 11: NUMEROS --- */
+        .nums-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 90%; max-width: 1100px; }
+        .num-card {
+            background: white; border-radius: 20px; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: var(--shadow); transition: transform 0.3s; min-height: 200px; text-align: center;
+        }
+        .num-card:hover { transform: translateY(-10px); }
+        .num-big { font-size: 2.5rem; font-weight: 900; color: var(--p-purple); margin-bottom: 10px; }
+        .num-title { font-weight: bold; font-size: 1.2rem; color: #444; margin-bottom: 10px; }
+        .num-desc { font-size: 0.95rem; color: #666; line-height: 1.4; }
+        .badge-app { background: var(--p-mint); color: #333; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-top: 5px; }
+
     </style>
 </head>
 <body>
 
-    <div class="bg-animated"></div>
+    <div class="deco-shape ds-1"></div>
+    <div class="deco-shape ds-2"></div>
 
-    <div class="nav-arrow nav-prev" onclick="changeSlide(-1)">&#10094;</div>
-    <div class="nav-arrow nav-next" onclick="changeSlide(1)">&#10095;</div>
+    <button id="prev-btn" class="nav-btn"><i class="fas fa-arrow-left"></i></button>
+    <button id="next-btn" class="nav-btn"><i class="fas fa-arrow-right"></i></button>
 
-    <div class="slide-container" id="slider">
-
-        <div class="slide active">
-            <h1 class="text-6xl font-bold text-center text-gray-800 mb-8 leading-tight">
-                Préjugés,<br>
-                <span class="text-[#A2D2FF]">quand tu nous tiens</span> 🤔
-            </h1>
-            
-            <div class="flex gap-6 mt-4 mb-12">
-                <div class="w-32 h-32 rounded-full bg-pink-200 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.1s">🧠</div>
-                <div class="w-32 h-32 rounded-full bg-purple-200 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.2s">⚖️</div>
-                <div class="w-32 h-32 rounded-full bg-blue-200 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.3s">🌍</div>
-            </div>
-
-            <div class="absolute bottom-10 w-full flex justify-center items-center gap-12 px-8">
-                <div class="flex flex-col items-center">
-                    <img src="logo-62.jpg" alt="62" class="h-20 object-contain hover:scale-110 transition">
-                </div>
-                <div class="flex flex-col items-center">
-                    <img src="logo-leo.png" alt="Léo Lagrange" class="h-20 object-contain hover:scale-110 transition">
-                </div>
-                <div class="flex flex-col items-center bg-gray-100 px-4 py-2 rounded-xl border border-gray-300">
-                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Programme</span>
-                    <span class="font-bold text-gray-800">Démocratie & Courage</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">👋 Faisons connaissance !</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
-                <div class="bg-blue-50 p-8 rounded-[40px] border-4 border-blue-200 shadow-lg">
-                    <h3 class="text-2xl font-bold text-blue-600 mb-4">Moi, c'est...</h3>
-                    <input type="text" placeholder="Ton Prénom" class="w-full bg-transparent text-5xl font-bold text-center border-b-4 border-blue-300 focus:outline-none">
-                </div>
-                <div class="bg-pink-50 p-8 rounded-[40px] border-4 border-pink-200 shadow-lg">
-                    <h3 class="text-2xl font-bold text-pink-600 mb-4">Ce que j'aime ❤️</h3>
-                    <textarea class="w-full bg-transparent text-2xl text-center resize-none focus:outline-none" rows="3"></textarea>
-                </div>
-                <div class="col-span-1 md:col-span-2 bg-purple-50 p-8 rounded-[40px] border-4 border-purple-200 shadow-lg text-center">
-                    <h3 class="text-2xl font-bold text-purple-600 mb-4">Ce que je déteste... 🤮</h3>
-                    <input type="text" placeholder="..." class="w-full bg-transparent text-4xl font-bold text-center focus:outline-none">
-                </div>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">🦁 L'Association Léo Lagrange</h2>
-            <div class="flex gap-4 mb-8">
-                <img src="logo-leo.png" class="h-24 object-contain">
-            </div>
-            <p class="text-2xl text-gray-700 font-light mb-10 text-center max-w-3xl">
-                Fondée en 1950, reconnue d'utilité publique. Notre but : lutter contre les inégalités et promouvoir la citoyenneté.
-            </p>
-            <div class="flex gap-4">
-                <div class="bg-blue-100 text-blue-700 p-6 rounded-3xl text-xl font-bold">Éducation Populaire</div>
-                <div class="bg-pink-100 text-pink-700 p-6 rounded-3xl text-xl font-bold">Loisirs & Formation</div>
-                <div class="bg-purple-100 text-purple-700 p-6 rounded-3xl text-xl font-bold">"Aux hommes le temps de vivre"</div>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">📜 Les règles du jeu</h2>
-            <div class="grid grid-cols-2 gap-6 w-full max-w-5xl">
-                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">🎤</span> <span class="text-xl font-bold">Ne pas couper la parole</span></div>
-                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">🤝</span> <span class="text-xl font-bold">Encourager chacun</span></div>
-                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">💬</span> <span class="text-xl font-bold">Dialogue ouvert</span></div>
-                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">🎯</span> <span class="text-xl font-bold">Ne viser personne</span></div>
-                <div class="col-span-2 bg-red-50 p-6 rounded-3xl flex justify-center items-center gap-6 shadow-md border-red-200 border-2">
-                    <span class="text-5xl">🚫</span> <span class="text-2xl font-bold text-red-500">Pas de cas personnel !</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">☁️ C'est quoi un Préjugé ?</h2>
-            <div class="flex gap-4 w-full max-w-2xl mb-6 z-10">
-                <input type="text" id="wordInput" placeholder="Ex: Les blondes sont..." class="flex-1 p-4 rounded-full border-2 border-gray-300 text-xl focus:outline-none shadow-inner" onkeypress="if(event.key === 'Enter') addWord()">
-                <button onclick="addWord()" class="bg-purple-500 text-white px-8 rounded-full font-bold hover:bg-purple-600 transition shadow-lg">Ajouter</button>
-            </div>
-            <div id="cloud-container" class="w-full h-full border-4 border-dashed border-gray-200 rounded-[40px] p-8 flex flex-wrap justify-center items-center content-center bg-white relative">
-                <p class="text-gray-400 text-2xl opacity-30 absolute">Donnez vos idées...</p>
-            </div>
-            <script>
-                function addWord() {
-                    const input = document.getElementById('wordInput');
-                    const text = input.value.trim();
-                    if(text) {
-                        const span = document.createElement('span');
-                        span.textContent = text;
-                        span.style.color = ['#A2D2FF', '#FFC8DD', '#CDB4DB', '#ff9f43'][Math.floor(Math.random()*4)];
-                        span.style.fontSize = (Math.floor(Math.random()*4)+2)+'rem';
-                        span.style.fontWeight = '800';
-                        span.style.transform = `rotate(${Math.floor(Math.random()*40)-20}deg)`;
-                        span.style.padding = '10px';
-                        document.getElementById('cloud-container').appendChild(span);
-                        input.value = '';
-                    }
-                }
-            </script>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">📊 Les Chiffres (2023)</h2>
-            
-            <div class="flex flex-wrap justify-center items-center gap-10 mb-12">
-                <div class="stat-bubble w-60 h-60 bg-red-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer hover:scale-105 transition" onclick="openStat('+32%', 'Racisme', 'Hausse des crimes et délits à caractère raciste en 2023.')">
-                    <span class="text-5xl font-bold text-red-500">+32%</span><span class="text-gray-700 font-bold">Racisme</span>
-                </div>
-                <div class="stat-bubble w-72 h-72 bg-blue-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer hover:scale-105 transition" onclick="openStat('N°1', 'Handicap', 'Le handicap reste le 1er motif de discrimination au travail.')">
-                    <span class="text-6xl font-bold text-blue-500">N°1</span><span class="text-gray-700 font-bold">Handicap</span>
-                </div>
-                <div class="stat-bubble w-52 h-52 bg-pink-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer hover:scale-105 transition" onclick="openStat('+13%', 'LGBT', 'Augmentation des agressions physiques envers les personnes LGBT.')">
-                    <span class="text-5xl font-bold text-pink-600">+13%</span><span class="text-gray-700 font-bold">LGBTphobie</span>
-                </div>
-            </div>
-
-            <div id="statOverlay" class="stat-overlay">
-                <h2 id="ovTitle" class="text-9xl font-black text-purple-500 mb-6">TITRE</h2>
-                <h3 id="ovSubtitle" class="text-5xl text-gray-800 mb-10 font-bold">Sous-titre</h3>
-                <p id="ovText" class="text-4xl text-gray-600 max-w-5xl text-center">Texte...</p>
-                <button onclick="document.getElementById('statOverlay').classList.remove('visible')" class="mt-16 bg-red-500 text-white px-12 py-5 rounded-full text-2xl font-bold">FERMER</button>
-            </div>
-
-            <script>
-                function openStat(t,s,txt) { document.getElementById('ovTitle').innerText=t; document.getElementById('ovSubtitle').innerText=s; document.getElementById('ovText').innerText=txt; document.getElementById('statOverlay').classList.add('visible'); }
-            </script>
-        </div>
-
-        <div class="slide" style="background: #000;">
-            <h2 class="text-5xl text-white font-bold mb-12 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">⚙️ Mécanique de la Haine</h2>
-            <p class="text-gray-400 mb-8 animate-pulse text-center">Cliquez pour comprendre</p>
-            
-            <div class="flex flex-col md:flex-row gap-8 w-full max-w-6xl justify-center items-center h-full pb-10 px-4">
-                
-                <div class="neon-off neon-blue p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-blue p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
-                    <div class="text-6xl mb-6 icon">🧠</div>
-                    <h3 class="text-3xl mb-6 font-bold">1. STÉRÉOTYPE</h3>
-                    <p class="text-xl">Une "Idée Reçue".<br>Croyance généralisante sur un groupe (souvent fausse).</p>
-                </div>
-
-                <div class="neon-off neon-green p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-green p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
-                    <div class="text-6xl mb-6 icon">❤️</div>
-                    <h3 class="text-3xl mb-6 font-bold">2. PRÉJUGÉ</h3>
-                    <p class="text-xl">Un "Jugement".<br>Attitude (souvent négative) envers quelqu'un à cause de son groupe.</p>
-                </div>
-
-                <div class="neon-off neon-pink p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-pink p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
-                    <div class="text-6xl mb-6 icon">✋</div>
-                    <h3 class="text-3xl mb-6 font-bold">3. ACTE</h3>
-                    <p class="text-xl">La Discrimination.<br>Traiter quelqu'un illégalement (Refus, Violence).</p>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">🌡️ Baromètre</h2>
-            
-            <div class="w-full h-full flex flex-col p-2 max-w-7xl">
-                <div class="bg-white rounded-3xl p-4 mb-2 border-4 border-gray-100 flex flex-col items-center relative">
-                    <div class="flex w-full gap-4 mt-2">
-                        <input id="situationInput" type="text" placeholder="Situation..." class="flex-1 p-3 border-2 border-gray-200 rounded-xl text-lg">
-                        <button onclick="document.getElementById('displaySituationText').innerText = document.getElementById('situationInput').value" class="bg-gray-800 text-white px-6 rounded-xl font-bold">Afficher</button>
-                    </div>
-                    <h2 id="displaySituationText" class="text-4xl font-black text-center text-gray-800 py-2">...</h2>
-                </div>
-
-                <div class="flex justify-between items-stretch gap-2 mb-2 h-32">
-                    <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-0" class="text-center font-bold text-2xl text-green-600 bg-white rounded-full py-1 border-2 border-green-200">0</div>
-                         <button onclick="vote(0)" class="flex-1 bg-green-100 rounded-2xl font-bold border-b-4 border-green-300 flex flex-col items-center justify-center hover:bg-green-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😊</span> Pas violent</button>
-                    </div>
-                    <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-1" class="text-center font-bold text-2xl text-lime-600 bg-white rounded-full py-1 border-2 border-lime-200">0</div>
-                         <button onclick="vote(1)" class="flex-1 bg-lime-100 rounded-2xl font-bold border-b-4 border-lime-300 flex flex-col items-center justify-center hover:bg-lime-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😐</span> Peu violent</button>
-                    </div>
-                    <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-2" class="text-center font-bold text-2xl text-yellow-600 bg-white rounded-full py-1 border-2 border-yellow-200">0</div>
-                         <button onclick="vote(2)" class="flex-1 bg-yellow-100 rounded-2xl font-bold border-b-4 border-yellow-300 flex flex-col items-center justify-center hover:bg-yellow-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😠</span> Violent</button>
-                    </div>
-                    <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-3" class="text-center font-bold text-2xl text-orange-600 bg-white rounded-full py-1 border-2 border-orange-200">0</div>
-                         <button onclick="vote(3)" class="flex-1 bg-orange-100 rounded-2xl font-bold border-b-4 border-orange-300 flex flex-col items-center justify-center hover:bg-orange-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😡</span> Très violent</button>
-                    </div>
-                    <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-4" class="text-center font-bold text-2xl text-red-600 bg-white rounded-full py-1 border-2 border-red-200">0</div>
-                         <button onclick="vote(4)" class="flex-1 bg-red-100 rounded-2xl font-bold border-b-4 border-red-300 flex flex-col items-center justify-center hover:bg-red-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">🤬</span> Trop violent</button>
-                    </div>
-                </div>
-
-                <div class="flex justify-center mb-2">
-                    <button onclick="saveSituation()" class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold shadow-lg hover:bg-blue-700 transition">💾 Enregistrer et Comparer</button>
-                </div>
-
-                <div class="flex-1 flex gap-4 overflow-hidden h-48">
-                    <div class="w-1/3 bg-white border-2 border-gray-100 rounded-3xl p-2 relative"><canvas id="barometerChart"></canvas></div>
-                    <div class="w-2/3 bg-white border-2 border-gray-100 rounded-3xl p-4 overflow-y-auto">
-                        <table class="w-full text-left">
-                            <thead class="bg-gray-50 border-b">
-                                <tr class="text-sm">
-                                    <th class="p-2">Situation</th>
-                                    <th class="p-2 text-center text-green-600">😊</th>
-                                    <th class="p-2 text-center text-lime-600">😐</th>
-                                    <th class="p-2 text-center text-yellow-600">😠</th>
-                                    <th class="p-2 text-center text-orange-600">😡</th>
-                                    <th class="p-2 text-center text-red-600">🤬</th>
-                                </tr>
-                            </thead>
-                            <tbody id="historyTable" class="text-sm">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <script>
-                let currentVotes = [0, 0, 0, 0, 0];
-                const colors = ['#4ade80', '#bef264', '#facc15', '#fb923c', '#f87171'];
-                const labels = ["Pas violent", "Peu violent", "Violent", "Très violent", "Trop violent"];
-                let chartInstance = null;
-
-                setTimeout(() => {
-                    chartInstance = new Chart(document.getElementById('barometerChart'), {
-                        type: 'doughnut', data: { labels: labels, datasets: [{ data: [1,1,1,1,1], backgroundColor: colors }] },
-                        options: { maintainAspectRatio: false, plugins: { legend: {display:false} } }
-                    });
-                }, 500);
-
-                function vote(idx) {
-                    currentVotes[idx]++;
-                    document.getElementById(`live-${idx}`).innerText = currentVotes[idx]; // Update live counter
-                }
-
-                function saveSituation() {
-                    const sit = document.getElementById('displaySituationText').innerText;
-                    if(sit === "..." || sit === "") return;
-                    
-                    // Add to table with ALL columns
-                    const row = `
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="py-2 font-bold px-2">${sit}</td>
-                            <td class="text-center font-bold text-green-600">${currentVotes[0]}</td>
-                            <td class="text-center font-bold text-lime-600">${currentVotes[1]}</td>
-                            <td class="text-center font-bold text-yellow-600">${currentVotes[2]}</td>
-                            <td class="text-center font-bold text-orange-600">${currentVotes[3]}</td>
-                            <td class="text-center font-bold text-red-600">${currentVotes[4]}</td>
-                        </tr>`;
-                    document.getElementById('historyTable').innerHTML = row + document.getElementById('historyTable').innerHTML;
-                    
-                    // Update Chart
-                    chartInstance.data.datasets[0].data = currentVotes;
-                    chartInstance.update();
-
-                    // Reset
-                    currentVotes = [0,0,0,0,0];
-                    for(let i=0;i<5;i++) document.getElementById(`live-${i}`).innerText = "0";
-                    document.getElementById('situationInput').value = "";
-                }
-            </script>
-        </div>
-
-        <div class="slide">
-             <h2 class="bubble-title">📺 Vidéo</h2>
-             <div class="w-full max-w-5xl aspect-video bg-black rounded-[40px] overflow-hidden shadow-2xl border-8 border-gray-800">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/Ia5ijY5vVyk" frameborder="0" allowfullscreen></iframe>
-             </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">🌈 L'Arc-en-ciel des possibles</h2>
-            <div class="scroll-y w-full px-4 pb-20">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                     <script>
-                         const situations = [
-                             { 
-                                 t:"Physique", i:"👕", 
-                                 sit:"Un groupe se moque de la tenue d'un élève dans la cour.", 
-                                 harc:"Critique les vêtements à voix haute et incite les autres à rire.", 
-                                 vic:"Baisse la tête, rougit et n'ose plus mettre ce vêtement.", 
-                                 tem:"Intervient : 'C'est juste un vêtement, on s'en fiche, arrêtez ça.'" 
-                             },
-                             { 
-                                 t:"Isolement", i:"🚫", 
-                                 sit:"Personne ne veut manger avec lui à la cantine.", 
-                                 harc:"Dit fort : 'Il est bizarre, ne l'approchez pas, on veut pas de lui.'", 
-                                 vic:"Mange seule dans son coin, triste et isolée.", 
-                                 tem:"Va s'asseoir à sa table pour manger avec lui et discuter." 
-                             },
-                             { 
-                                 t:"Rumeurs", i:"🤫", 
-                                 sit:"On raconte partout qu'elle a fait des choses graves.", 
-                                 harc:"Invente des détails gênants pour se rendre intéressant.", 
-                                 vic:"A honte de venir au collège, sent les regards sur elle.", 
-                                 tem:"Répond aux rumeurs : 'C'est faux, tu n'en sais rien, tais-toi.'" 
-                             },
-                             { 
-                                 t:"Cyber", i:"📱", 
-                                 sit:"Une photo humiliante est partagée sur un groupe Snap.", 
-                                 harc:"Diffuse la photo, demande des screens et se moque.", 
-                                 vic:"Ne veut plus sortir de sa chambre, a peur de revenir en cours.", 
-                                 tem:"Ne partage pas, ne like pas. Fait une capture d'écran et appelle le 3018." 
-                             },
-                             { 
-                                 t:"Pression", i:"😈", 
-                                 sit:"Un groupe force un élève à voler un truc au magasin.", 
-                                 harc:"Traite l'élève de 'poule mouillée' et menace de l'exclure s'il refuse.", 
-                                 vic:"Tremble, a peur des conséquences mais a peur du groupe.", 
-                                 tem:"Rappelle les risques : 'On va tous avoir des ennuis, ça vaut pas le coup, on part'." 
-                             },
-                             { 
-                                 t:"Critique", i:"📢", 
-                                 sit:"Moqueries méchantes quand il passe au tableau.", 
-                                 harc:"Imite sa voix, fait des bruits pour le déconcentrer.", 
-                                 vic:"Perd ses moyens, bafouille et n'arrive plus à parler.", 
-                                 tem:"Encourage à voix haute : 'Vas-y continue, on t'écoute nous !'." 
-                             }
-                         ];
-                         situations.forEach((s) => {
-                             document.write(`
-                                <div class="bg-white p-6 rounded-3xl border-2 border-gray-200 shadow hover:shadow-xl transition cursor-pointer" onclick="this.querySelector('.detail').classList.toggle('hidden')">
-                                    <div class="flex items-center gap-3 mb-4"><span class="text-4xl">${s.i}</span><h3 class="font-bold text-2xl text-gray-800">${s.t}</h3></div>
-                                    <p class="text-md font-semibold text-gray-600 mb-4 border-l-4 border-blue-400 pl-3">${s.sit}</p>
-                                    <div class="detail hidden space-y-3 text-sm bg-gray-50 p-4 rounded-xl">
-                                        <div class="text-red-600 border-l-2 border-red-200 pl-2"><strong>👿 Harceleur :</strong> ${s.harc}</div>
-                                        <div class="text-blue-600 border-l-2 border-blue-200 pl-2"><strong>😢 Victime :</strong> ${s.vic}</div>
-                                        <div class="text-green-700 bg-green-100 p-2 rounded border-l-4 border-green-500"><strong>🦸 Témoin Agit :</strong> ${s.tem}</div>
-                                    </div>
-                                    <p class="text-center text-xs text-gray-400 mt-2 detail font-bold">▼ Cliquez pour voir les rôles ▼</p>
-                                </div>
-                             `);
-                         });
-                     </script>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">📞 Contacts d'Urgence</h2>
-            
-            <div class="flex flex-col gap-6 w-full max-w-5xl">
-                <div class="bg-gradient-to-r from-green-400 to-teal-500 text-white p-8 rounded-[40px] shadow-2xl flex flex-col md:flex-row items-center gap-8 border-4 border-white">
-                    <div class="text-7xl font-black">112<br>911</div>
-                    <div class="text-left">
-                        <h3 class="text-3xl font-bold mb-2">URGENCES UNIVERSELLES</h3>
-                        <p class="text-lg font-medium leading-relaxed">
-                            Numéros universelles et internationales, fonctionnent à travers toute la planète, en cas d'urgence immédiate si on ne sait pas qui appeler on peut appeler le 911.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex-1 bg-yellow-100 p-6 rounded-[30px] shadow-lg border-l-8 border-yellow-400">
-                        <h3 class="text-5xl font-black text-yellow-600 mb-2">3018</h3>
-                        <p class="font-bold text-gray-700 uppercase">Cyber-Harcèlement</p>
-                        <p class="text-sm text-gray-600 mt-2">Écoute, conseils et suppression de contenu.</p>
-                    </div>
-                    <div class="flex-1 bg-blue-100 p-6 rounded-[30px] shadow-lg border-l-8 border-blue-400">
-                        <h3 class="text-5xl font-black text-blue-600 mb-2">3928</h3>
-                        <p class="font-bold text-gray-700 uppercase">Anti-Discriminations</p>
-                        <p class="text-sm text-gray-600 mt-2">Défenseur des droits. Signaler une injustice.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="bubble-title">❓ Le Quiz Final</h2>
-            <div id="quiz-container" class="w-full max-w-4xl bg-white p-10 rounded-[40px] shadow-2xl border-4 border-blue-50"></div>
-            <script>
-                const quizData=[
-                    {q:"Un préjugé, c'est...",o:["Une vérité scientifique","Un jugement sans savoir","Une preuve d'intelligence"],c:1},
-                    {q:"La discrimination est punie par...",o:["La Loi (Code Pénal)","Le règlement du collège","Juste les parents"],c:0},
-                    {q:"Que faire si je suis témoin ?",o:["Rien, ce n'est pas mon problème","Filmer","Prévenir un adulte et soutenir la victime"],c:2},
-                    {q:"Quel numéro est universel dans le monde ?",o:["Le 118 218","Le 911 / 112","Le 06 06 06 06 06"],c:1},
-                    {q:"Le handicap est...",o:["Rare","La 1ère cause de discrimination","Pas grave"],c:1}
-                ];
-                let qIdx=0;
-                function loadQ(){
-                    const d=quizData[qIdx];
-                    document.getElementById('quiz-container').innerHTML=`
-                        <h3 class='text-3xl font-bold mb-6'>Question ${qIdx+1}/${quizData.length}</h3>
-                        <p class='text-2xl mb-8 font-semibold'>${d.q}</p>
-                        <div class='grid gap-4'>${d.o.map((x,i)=>`<button onclick='chk(${i},${d.c},this)' class='bg-gray-100 p-4 rounded-xl text-xl hover:bg-blue-100 border-2 border-transparent transition'>${x}</button>`).join('')}</div>
-                    `;
-                }
-                function chk(s,c,b){
-                    const btns = document.querySelectorAll('#quiz-container button');
-                    btns.forEach(btn => btn.disabled = true);
-                    
-                    if(s===c){ 
-                        b.style.background="#4ade80"; b.style.borderColor="#22c55e"; b.style.color="white";
-                        setTimeout(()=>{if(++qIdx<quizData.length)loadQ(); else document.getElementById('quiz-container').innerHTML="<div class='flex flex-col items-center'><div class='text-9xl mb-4 animate-bounce'>🏆</div><h1 class='text-6xl font-bold text-green-600'>BRAVO !</h1><p class='text-2xl mt-4'>Tu es un expert !</p></div>"},1200);
-                    } else { 
-                        b.style.background="#f87171"; b.style.borderColor="#ef4444"; b.style.color="white";
-                        setTimeout(() => btns.forEach(btn => btn.disabled = false), 1000);
-                    }
-                }
-                loadQ();
-            </script>
-        </div>
-
-        <div class="slide">
-            <h2 class="text-7xl font-bold text-gray-800 mb-8">Merci ! 🙏</h2>
-            <div class="text-9xl animate-bounce mb-8">👋</div>
-            <button onclick="location.reload()" class="bg-blue-600 text-white px-12 py-5 rounded-full font-bold text-2xl shadow-xl hover:scale-110 transition">Recommencer</button>
-        </div>
-
+    <div id="rules-container" class="rules-hidden">
+        <div class="rule-bubble" onclick="alert('On ne coupe pas la parole !')">🎤 Ne pas couper la parole</div>
+        <div class="rule-bubble" onclick="alert('On encourage tout le monde !')">🤝 Encourager chacun</div>
+        <div class="rule-bubble" onclick="alert('Dialogue ouvert et sympa')">💬 Dialogue ouvert</div>
+        <div class="rule-bubble" onclick="alert('On ne vise personne personnellement')">🎯 Ne viser personne</div>
+        <div class="rule-bubble" onclick="alert('Pas de cas personnels ici')">🚫 Pas de cas perso</div>
     </div>
 
-    <script>
-        let cSlide=0; const slides=document.querySelectorAll('.slide');
-        function upS(){ slides.forEach((s,i)=>{ s.classList.remove('active','prev'); if(i===cSlide)s.classList.add('active'); else if(i<cSlide)s.classList.add('prev'); }); }
-        function changeSlide(d){ const n=cSlide+d; if(n>=0&&n<slides.length){ cSlide=n; upS(); } }
-        document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight')changeSlide(1); if(e.key==='ArrowLeft')changeSlide(-1); });
-    </script>
+    <div class="slide active" id="slide1">
+        <h1>Pour vivre ensemble,<br>faisons un pas</h1>
+        <p>Une animation interactive pour mieux se comprendre.</p>
+        <div class="intro-frame">
+            <img src="logo-leo.png" alt="Léo Lagrange">
+        </div>
+        <div class="art-shapes">
+            <div class="art-circle">62</div>
+            <div class="art-square"><i class="fas fa-hand-holding-heart"></i></div>
+            <div class="art-circle" style="background:var(--p-pink)"><i class="fas fa-users"></i></div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide2">
+        <h1 style="margin-bottom: 300px;">Les Règles du Jeu</h1> 
+    </div>
+
+    <div class="slide" id="slide3">
+        <h1>Faisons connaissance !</h1>
+        <div class="ib-container">
+            <div class="ib-item" style="border-color:var(--p-blue)">Mon Prénom ?</div>
+            <div class="ib-item" style="border-color:var(--p-pink)">J'adore... 😍</div>
+            <div class="ib-item" style="border-color:var(--p-mint)">Je déteste... 🤮</div>
+            <div class="ib-item" style="border-color:var(--p-yellow)">Mon Rêve 🚀</div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide4">
+        <h1>Léo Lagrange</h1>
+        <div class="leo-frame">
+            <div class="leo-col">
+                <h2>L'Homme (1900-1940)</h2>
+                <div class="leo-text">
+                    Léo Lagrange est né le 28 novembre 1900. Avocat et député, il devient en 1936 <span class="leo-highlight">Sous-secrétaire d'État aux Sports et Loisirs</span>.
+                </div>
+                <div class="leo-text">
+                    Il est célèbre pour avoir créé les <strong>congés payés</strong>, permettant aux ouvriers de partir en vacances pour la première fois. Il développe aussi les auberges de jeunesse.
+                </div>
+                <div class="leo-text">
+                    Refusant d'être protégé par son statut, il part au front et meurt au combat le 9 juin 1940.
+                </div>
+                <div class="leo-img-box"><img src="logo-leo.png"></div>
+            </div>
+            <div class="leo-col" style="border-left: 2px dashed #eee; padding-left: 40px;">
+                <h2>L'Association Aujourd'hui</h2>
+                <div class="leo-text">
+                    Fondée en 1950, la Fédération Léo Lagrange continue son combat pour l'<span class="leo-highlight">Éducation Populaire</span>.
+                </div>
+                <div class="leo-text">
+                    Notre mission est de donner à chacun les moyens de s'émanciper et de lutter contre toutes les formes d'inégalités et de discriminations.
+                </div>
+                <div class="leo-text">
+                    Nous gérons des centres sociaux, des crèches, et des centres de formation partout en France.
+                </div>
+                <div class="leo-text" style="font-style:italic; font-weight:bold; color:var(--p-blue-dark); text-align:center;">
+                    "Aux hommes le temps de vivre !"
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide5">
+        <button class="reset-btn" onclick="clearCloud()">Effacer</button>
+        <h1>C'est quoi la Violence ?</h1>
+        <input type="text" id="word-input" placeholder="Tapez un mot + Entrée">
+        <div id="cloud-canvas"></div>
+    </div>
+
+    <div class="slide" id="slide6">
+        <h1>Qui fait quoi ?</h1>
+        <p>Restez <strong>2 secondes</strong> sur un cercle pour l'ouvrir !</p>
+        <div class="circles-zone">
+            <div class="c-item c-region" onmouseenter="startExpand(this)" onmouseleave="stopExpand(this)">
+                <span class="c-label">Région</span>
+                <div class="c-details">
+                    <span class="tag">Lycées</span>
+                    <span class="tag">Transports (TER)</span>
+                    <span class="tag">Formation Pro</span>
+                    <span class="tag">Santé (ARS)</span>
+                </div>
+            </div>
+            <div class="c-item c-dept" onmouseenter="startExpand(this)" onmouseleave="stopExpand(this)">
+                <span class="c-label">Département</span>
+                <div class="c-details">
+                    <span class="tag">Collèges</span>
+                    <span class="tag">Routes</span>
+                    <span class="tag">Solidarité (RSA)</span>
+                    <span class="tag">Aide Enfance (ASE)</span>
+                </div>
+            </div>
+            <div class="c-item c-ville" onmouseenter="startExpand(this)" onmouseleave="stopExpand(this)">
+                <span class="c-label">Ville</span>
+                <div class="c-details">
+                    <span class="tag">Écoles primaires</span>
+                    <span class="tag">État civil</span>
+                    <span class="tag">Urbanisme</span>
+                    <span class="tag">Cantine</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide7">
+        <h1>Les Chiffres du Harcèlement</h1>
+        <div class="stats-row">
+            <div class="stat-circle" style="border-color: var(--p-pink)">
+                <div class="s-val">1 M</div>
+                <div class="s-label">Victimes</div>
+                <div class="s-comment">1 million d'enfants harcelés chaque année en France.</div>
+            </div>
+            <div class="stat-circle" style="border-color: var(--p-blue)">
+                <div class="s-val">Collège</div>
+                <div class="s-label">Zone Rouge</div>
+                <div class="s-comment">C'est la période où le harcèlement est le plus fort.</div>
+            </div>
+            <div class="stat-circle" style="border-color: var(--p-purple)">
+                <div class="s-val">+20%</div>
+                <div class="s-label">Cyber</div>
+                <div class="s-comment">Augmentation du cyber-harcèlement (réseaux sociaux).</div>
+            </div>
+            <div class="stat-circle" style="border-color: var(--p-yellow)">
+                <div class="s-val">3018</div>
+                <div class="s-label">Solution</div>
+                <div class="s-comment">Numéro gratuit et Appli pour signaler.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" style="background: #000;">
+        <h2 class="text-5xl text-white font-bold mb-12 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">✅ Les 3 OUI du Consentement</h2>
+        <p class="text-gray-400 mb-8 animate-pulse text-center">Cliquez pour allumer</p>
+        
+        <div class="flex flex-col md:flex-row gap-8 w-full max-w-6xl justify-center items-center h-full pb-10 px-4">
+            
+            <div class="neon-off neon-blue p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-blue p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                <div class="text-6xl mb-6 icon">🧠</div>
+                <h3 class="text-4xl mb-6 font-bold">INFORMÉ</h3>
+                <p class="text-xl">Je sais exactement à quoi je dis oui.<br>Pas de secrets.</p>
+            </div>
+
+            <div class="neon-off neon-green p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-green p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                <div class="text-6xl mb-6 icon">🗽</div>
+                <h3 class="text-4xl mb-6 font-bold">LIBRE & RÉVOCABLE</h3>
+                <p class="text-xl">Je ne suis pas forcé.<br>Je peux changer d'avis n'importe quand.</p>
+            </div>
+
+            <div class="neon-off neon-pink p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-pink p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                <div class="text-6xl mb-6 icon">✨</div>
+                <h3 class="text-4xl mb-6 font-bold">AUTHENTIQUE</h3>
+                <p class="text-xl">Je le pense vraiment !<br>C'est un "Grand OUI".</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="bubble-title">📺 Vidéo</h2>
+        <div class="w-full max-w-5xl aspect-video bg-black rounded-[40px] overflow-hidden shadow-2xl border-8 border-gray-800">
+           <iframe width="100%" height="100%" src="https://www.youtube.com/embed/Ia5ijY5vVyk" frameborder="0" allowfullscreen></iframe>
+        </div>
+   </div>
+
+    <div class="slide" id="slide10">
+        <h1>L'Arc-en-ciel des possibles</h1>
+        <div class="courage-container">
+            <div class="game-zone">
+                <div style="position:absolute; top:20px; left:50%; transform:translateX(-50%); font-weight:bold; color:#aaa;">ZONE DE JEU</div>
+                
+                <div class="flippable-card" id="active-card">
+                    <div class="fc-front" id="card-front-content">
+                        <div id="front-icon" style="font-size:4rem; margin-bottom:10px;"></div>
+                        <div id="front-title"></div>
+                    </div>
+                    <div class="fc-back" id="card-back-content">
+                        <div id="back-sit" style="font-style:italic; font-weight:bold; color:var(--p-blue);"></div>
+                        <div id="back-harc" style="font-size:0.9rem; color:#e63946;">👿 Harceleur : ...</div>
+                        <div id="back-vic" style="font-size:0.9rem; color:#457b9d;">😢 Victime : ...</div>
+                        <div id="back-tem" style="font-size:0.9rem; color:#2a9d8f;">🦸 Témoin : ...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="situations-list">
+                <div class="sit-btn" onclick="playScenario('👕', 'Physique', 'Un groupe se moque de la tenue d\'un élève.', 'Critique fort les vêtements.', 'Baisse la tête, a honte.', 'Intervient : C\'est juste un vêtement, arrêtez.')">1. Physique (Moqueries)</div>
+                <div class="sit-btn" onclick="playScenario('🚫', 'Isolement', 'Personne ne veut manger avec lui à la cantine.', 'Dit qu\'il est bizarre.', 'Mange seul, triste.', 'Va s\'asseoir avec lui.')">2. Isolement (Cantine)</div>
+                <div class="sit-btn" onclick="playScenario('🤫', 'Rumeurs', 'On raconte partout qu\'elle a fait des choses.', 'Invente des histoires.', 'Sent les regards, pleure.', 'Dément la rumeur : C\'est faux.')">3. Rumeurs</div>
+                <div class="sit-btn" onclick="playScenario('📱', 'Cyber', 'Une photo humiliante tourne sur Snap.', 'Partage et demande des screens.', 'Ne veut plus venir en cours.', 'Ne partage pas, screen et appelle 3018.')">4. Cyber (Photo)</div>
+                <div class="sit-btn" onclick="playScenario('😈', 'Pression', 'On force un élève à voler un truc.', 'Menace d\'exclusion.', 'Tremble, a peur.', 'Rappelle les risques et part.')">5. Pression (Vol)</div>
+                <div class="sit-btn" onclick="playScenario('📢', 'Critique', 'Moqueries au tableau.', 'Imite sa voix.', 'Perd ses moyens.', 'Encourage : Vas-y continue !')">6. Critique (Tableau)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide11">
+        <h1>Numéros d'Urgence</h1>
+        <div class="nums-grid">
+            <div class="num-card" style="border-top: 5px solid #06d6a0">
+                <div class="num-big">112 / 911</div>
+                <div class="num-title">Universel & International</div>
+                <div class="num-desc">
+                    Numéros universelles et internationales, fonctionnent à travers toute la planète, en cas d'urgence immédiate si on ne sait pas qui appeler on peut appeler le 911.
+                </div>
+            </div>
+            <div class="num-card" style="border-top: 5px solid #118ab2">
+                <div class="num-big">119</div>
+                <div class="num-title">Enfance en Danger</div>
+                <div class="num-desc">Enfant maltraité ou témoin ? Appel gratuit, 24/7. N'apparaît pas sur la facture téléphonique.</div>
+            </div>
+            <div class="num-card" style="border-top: 5px solid #ef476f">
+                <div class="num-big">17</div>
+                <div class="num-title">Police Secours</div>
+                <div class="num-desc">En cas d'urgence immédiate : agression, violence, vol en cours.</div>
+            </div>
+            <div class="num-card" style="border-top: 5px solid #ffd166">
+                <div class="num-big">3018</div>
+                <div class="num-title">Cyber-Harcèlement</div>
+                <div class="num-desc">
+                    L'association e-Enfance vous écoute. Ils peuvent faire supprimer des contenus.
+                    <strong>Téléchargez l'application 3018</strong> pour stocker les preuves.
+                </div>
+            </div>
+            <div class="num-card" style="border-top: 5px solid #a2d2ff">
+                <div class="num-big">3028</div>
+                <div class="num-title">Défenseur des droits</div>
+                <div class="num-desc">
+                    On vous a refusé un logement, un emploi ou l'entrée en boîte à cause de votre couleur de peau ou de votre nom ? 
+                    Appelez pour faire valoir vos droits.
+                </div>
+            </div>
+            <div class="num-card" style="border-top: 5px solid #cdb4db">
+                <div class="num-big">3114</div>
+                <div class="num-title">Prévention Suicide</div>
+                <div class="num-desc">Une écoute professionnelle et confidentielle pour les personnes en détresse.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2 class="bubble-title">❓ Quiz Final</h2>
+        <div id="quiz-container" class="w-full max-w-4xl bg-white p-10 rounded-[40px] shadow-2xl border-4 border-blue-50"></div>
+        <script>
+            const quizData=[
+                {q:"Combien d'élèves sont victimes de harcèlement ?",o:["100 000","500 000","1 Million"],c:2},
+                {q:"Le numéro 3018 permet de...",o:["Supprimer des photos/vidéos","Commander une pizza","Avoir de l'aide aux devoirs"],c:0},
+                {q:"Le consentement doit être...",o:["Forcé","Hésitant","Libre, Éclairé et Enthousiaste"],c:2},
+                {q:"Le cyber-harcèlement...",o:["S'arrête à la sortie de l'école","Continue à la maison sur le téléphone","N'est pas grave"],c:1},
+                {q:"En cas d'urgence vitale n'importe où dans le monde, j'appelle...",o:["Le 118 218","Le 911 / 112","Ghostbusters"],c:1}
+            ];
+            let qIdx=0;
+            function loadQ(){
+                const d=quizData[qIdx];
+                document.getElementById('quiz-container').innerHTML=`
+                    <h3 class='text-3xl font-bold mb-6'>Question ${qIdx+1}/${quizData.length}</h3>
+                    <p class='text-2xl mb-8 font-semibold'>${d.q}</p>
+                    <div class='grid gap-4'>${d.o.map((x,i)=>`<button onclick='chk(${i},${d.c},this)' class='bg-gray-100 p-4 rounded-xl text-xl hover:bg-blue-100 border-2 border-transparent transition'>${x}</button>`).join('')}</div>
+                `;
+            }
+            function chk(s,c,b){
+                const btns = document.querySelectorAll('#quiz-container button');
+                btns.forEach(btn => btn.disabled = true);
+                if(s===c){ 
+                    b.style.background="#4ade80"; b.style.borderColor="#22c55e"; b.style.color="white";
+                    setTimeout(()=>{if(++qIdx<quizData.length)loadQ(); else document.getElementById('quiz-container').innerHTML="<div class='flex flex-col items-center'><div class='text-9xl mb-4 animate-bounce'>🏆</div><h1 class='text-6xl font-bold text-green-600'>BRAVO !</h1><p class='text-2xl mt-4'>Tu es un expert du vivre ensemble !</p></div>"},1200);
+                } else { 
+                    b.style.background="#f87171"; b.style.borderColor="#ef4444"; b.style.color="white";
+                    setTimeout(() => btns.forEach(btn => btn.disabled = false), 1000);
+                }
+            }
+            loadQ();
+        </script>
+    </div>
+
+    <div class="slide" id="slide13">
+        <h1>Merci à tous !</h1>
+        <div class="intro-frame">
+            <img src="logo-leo.png" alt="Léo Lagrange">
+        </div>
+    </div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 13;
+    const rulesContainer = document.getElementById('rules-container');
+
+    function showSlide(n) {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.getElementById('slide'+n).classList.add('active');
+
+        // GESTION DES RÈGLES
+        rulesContainer.className = ''; 
+        if (n === 1) {
+            rulesContainer.classList.add('rules-hidden');
+        } else if (n === 2) {
+            rulesContainer.classList.add('rules-center');
+        } else {
+            rulesContainer.classList.add('rules-mini');
+        }
+    }
+
+    document.getElementById('next-btn').onclick = () => { if(currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); }};
+    document.getElementById('prev-btn').onclick = () => { if(currentSlide > 1) { currentSlide--; showSlide(currentSlide); }};
+
+    /* --- GESTION CERCLES (Délai 2s) --- */
+    let expandTimer;
+    function startExpand(el) {
+        expandTimer = setTimeout(() => {
+            el.classList.add('expanded');
+        }, 2000); 
+    }
+    function stopExpand(el) {
+        clearTimeout(expandTimer);
+        el.classList.remove('expanded');
+    }
+
+    /* --- NUAGE MOTS --- */
+    const cloudCanvas = document.getElementById('cloud-canvas');
+    document.getElementById('word-input').addEventListener('keypress', function(e) {
+        if(e.key === 'Enter' && this.value.trim() !== '') {
+            addWord(this.value);
+            this.value = '';
+        }
+    });
+
+    function addWord(text) {
+        const span = document.createElement('div');
+        span.className = 'cloud-item';
+        span.innerText = text;
+        span.style.color = `hsl(${Math.random()*360}, 70%, 60%)`;
+        span.style.fontSize = (Math.random()*20 + 20) + 'px';
+        span.style.transform = `rotate(${Math.random()*40 - 20}deg)`;
+        
+        // Positionnement simple
+        const x = Math.random() * (cloudCanvas.offsetWidth - 100);
+        const y = Math.random() * (cloudCanvas.offsetHeight - 50);
+        span.style.left = x + 'px';
+        span.style.top = y + 'px';
+        
+        cloudCanvas.appendChild(span);
+    }
+    function clearCloud() { cloudCanvas.innerHTML = ''; }
+
+    /* --- ARC EN CIEL (FLIP CARD LOGIC) --- */
+    function playScenario(icon, title, sit, harc, vic, tem) {
+        const card = document.getElementById('active-card');
+        const frontIcon = document.getElementById('front-icon');
+        const frontTitle = document.getElementById('front-title');
+        
+        const backSit = document.getElementById('back-sit');
+        const backHarc = document.getElementById('back-harc');
+        const backVic = document.getElementById('back-vic');
+        const backTem = document.getElementById('back-tem');
+        
+        // Reset
+        card.style.display = 'none';
+        card.classList.remove('do-flip');
+        
+        // Setup new content
+        frontIcon.innerText = icon;
+        frontTitle.innerText = title;
+        
+        backSit.innerText = sit;
+        backHarc.innerText = "👿 " + harc;
+        backVic.innerText = "😢 " + vic;
+        backTem.innerText = "🦸 " + tem;
+        
+        // Trigger Animation
+        setTimeout(() => {
+            card.style.display = 'block';
+            setTimeout(() => {
+                card.classList.add('do-flip');
+            }, 100);
+        }, 10);
+    }
+
+    // Init
+    showSlide(1);
+
+</script>
 </body>
 </html>
