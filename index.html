@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pour vivre ensemble, faisons un pas</title>
+    <title>Préjugés & Discriminations</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,7 +19,7 @@
 
         /* --- Fond Animé --- */
         .bg-animated {
-            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb);
+            background: linear-gradient(-45deg, #a18cd1, #fbc2eb, #8fd3f4, #84fab0);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
             position: absolute;
@@ -45,8 +45,8 @@
 
         /* --- Titres --- */
         .bubble-title {
-            background: #FF6B6B; color: white; padding: 0.8rem 2.5rem;
-            border-radius: 50px; box-shadow: 0 8px 0 #ee5253; margin-bottom: 1.5rem;
+            background: #6c5ce7; color: white; padding: 0.8rem 2.5rem;
+            border-radius: 50px; box-shadow: 0 8px 0 #4834d4; margin-bottom: 1.5rem;
             text-align: center; animation: float 6s ease-in-out infinite;
             font-size: 2rem; font-weight: 800; letter-spacing: 1px; z-index: 20;
         }
@@ -60,15 +60,14 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: all 0.3s; z-index: 50;
             font-size: 2rem; color: #333; user-select: none;
         }
-        .nav-arrow:hover { transform: translateY(-50%) scale(1.15); background: #4ECDC4; color: white; }
+        .nav-arrow:hover { transform: translateY(-50%) scale(1.15); background: #6c5ce7; color: white; }
         .nav-prev { left: 20px; } .nav-next { right: 20px; }
 
         /* --- Effet NÉON (Slide 7) --- */
-        /* État éteint (Fantôme) */
         .neon-off {
             background: #000;
             border: 2px solid #333;
-            color: #222; /* Texte quasi invisible */
+            color: #222;
             box-shadow: none;
             cursor: pointer;
             transition: border-color 0.3s;
@@ -77,27 +76,19 @@
         .neon-off h3, .neon-off p { opacity: 0; }
         .neon-off:hover { border-color: #555; }
 
-        /* État allumé */
         .neon-on {
             background: rgba(0,0,0,0.95);
             border-color: #fff;
             color: #fff;
             transform: scale(1.05);
-            /* Animation d'allumage */
             animation: turnOn 1.5s ease-out forwards;
         }
         
         @keyframes turnOn {
-            0% { opacity: 0.5; }
-            10% { opacity: 0.1; }
-            20% { opacity: 0.8; }
-            30% { opacity: 0.2; }
-            40% { opacity: 1; box-shadow: 0 0 30px currentColor; }
-            50% { opacity: 0.4; box-shadow: none; }
-            60% { opacity: 1; box-shadow: 0 0 30px currentColor; }
-            70% { opacity: 0.7; }
-            80% { opacity: 1; box-shadow: 0 0 40px currentColor; }
-            100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
+            0% { opacity: 0.5; } 10% { opacity: 0.1; } 20% { opacity: 0.8; } 30% { opacity: 0.2; }
+            40% { opacity: 1; box-shadow: 0 0 30px currentColor; } 50% { opacity: 0.4; box-shadow: none; }
+            60% { opacity: 1; box-shadow: 0 0 30px currentColor; } 70% { opacity: 0.7; }
+            80% { opacity: 1; box-shadow: 0 0 40px currentColor; } 100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
         }
 
         .neon-on .icon { opacity: 1; text-shadow: 0 0 20px currentColor; }
@@ -105,15 +96,15 @@
         .neon-on p { opacity: 1; }
         
         .neon-blue.neon-on { color: #00eaff; border-color: #00eaff; }
-        .neon-green.neon-on { color: #00ff00; border-color: #00ff00; }
-        .neon-pink.neon-on { color: #ff00de; border-color: #ff00de; }
+        .neon-green.neon-on { color: #fab1a0; border-color: #fab1a0; } /* Orange pastel pour Préjugé */
+        .neon-pink.neon-on { color: #ff0000; border-color: #ff0000; } /* Rouge pour Discrimination */
 
         /* --- Banderole Défilante --- */
         .marquee-container {
-            width: 100%; overflow: hidden; background: #000; color: #00ff00;
+            width: 100%; overflow: hidden; background: #000; color: #fff;
             font-family: 'Courier New', monospace; font-weight: bold; padding: 15px 0;
             position: absolute; top: 0; left: 0; z-index: 5;
-            border-bottom: 2px solid #00ff00;
+            border-bottom: 2px solid #6c5ce7;
         }
         .marquee-content { display: inline-block; white-space: nowrap; animation: scroll 25s linear infinite; font-size: 1.2rem; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
@@ -122,11 +113,9 @@
         .blink-slow { animation: blink 2s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.95); } }
 
-        /* --- Scrollbar masquée --- */
         .scroll-y { overflow-y: auto; max-height: 100%; width: 100%; }
         .scroll-y::-webkit-scrollbar { display: none; }
         
-        /* --- Overlay Stats --- */
         .stat-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.98);
             z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -144,30 +133,25 @@
 
     <div class="slide-container" id="slider">
 
-        <!-- 1. ACCUEIL (AVEC LOGOS) -->
         <div class="slide active">
             <h1 class="text-6xl font-bold text-center text-gray-800 mb-8 leading-tight">
-                Pour vivre ensemble,<br>
-                <span class="text-[#4ECDC4]">faisons un pas</span> 🦶
+                Démocratie & Courage<br>
+                <span class="text-[#6c5ce7]">Préjugés & Discriminations</span> 🚫
             </h1>
             
             <div class="flex gap-6 mt-4 mb-12">
-                <div class="w-32 h-32 rounded-full bg-yellow-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.1s">🤝</div>
-                <div class="w-32 h-32 rounded-full bg-pink-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.2s">❤️</div>
-                <div class="w-32 h-32 rounded-full bg-blue-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.3s">🗣️</div>
+                <div class="w-32 h-32 rounded-full bg-purple-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.1s">🧠</div>
+                <div class="w-32 h-32 rounded-full bg-orange-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.2s">⚖️</div>
+                <div class="w-32 h-32 rounded-full bg-blue-300 flex items-center justify-center text-5xl shadow-xl animate-bounce" style="animation-delay: 0.3s">🌍</div>
             </div>
 
-            <!-- Logos Partenaires -->
             <div class="absolute bottom-10 w-full flex justify-center items-center gap-12 px-8">
-                <!-- Pas-de-Calais -->
                 <div class="flex flex-col items-center">
                     <img src="https://upload.wikimedia.org/wikipedia/fr/3/30/Logo_Pas-de-Calais_%282009%29.svg" alt="Pas-de-Calais" class="h-20 object-contain hover:scale-110 transition">
                 </div>
-                <!-- Léo Lagrange -->
                 <div class="flex flex-col items-center">
                     <img src="https://www.leolagrange.org/wp-content/uploads/2019/04/logo-leo-lagrange.png" alt="Léo Lagrange" class="h-16 object-contain hover:scale-110 transition">
                 </div>
-                <!-- Démocratie & Courage -->
                 <div class="flex flex-col items-center bg-gray-100 px-4 py-2 rounded-xl border border-gray-300">
                     <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Programme</span>
                     <span class="font-bold text-gray-800">Démocratie & Courage</span>
@@ -175,60 +159,57 @@
             </div>
         </div>
 
-        <!-- 2. PRÉSENTATION -->
         <div class="slide">
-            <h2 class="bubble-title">👋 Qui suis-je ?</h2>
+            <h2 class="bubble-title">👋 Icebreaker</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
-                <div class="bg-blue-50 p-8 rounded-[40px] border-4 border-blue-200 shadow-lg">
-                    <h3 class="text-2xl font-bold text-blue-600 mb-4">Moi, c'est...</h3>
-                    <input type="text" placeholder="Ton Prénom" class="w-full bg-transparent text-5xl font-bold text-center border-b-4 border-blue-300 focus:outline-none">
+                <div class="bg-indigo-50 p-8 rounded-[40px] border-4 border-indigo-200 shadow-lg">
+                    <h3 class="text-2xl font-bold text-indigo-600 mb-4">Moi, c'est...</h3>
+                    <input type="text" placeholder="Ton Prénom" class="w-full bg-transparent text-5xl font-bold text-center border-b-4 border-indigo-300 focus:outline-none">
                 </div>
-                <div class="bg-green-50 p-8 rounded-[40px] border-4 border-green-200 shadow-lg">
-                    <h3 class="text-2xl font-bold text-green-600 mb-4">Ce que j'aime ❤️</h3>
+                <div class="bg-pink-50 p-8 rounded-[40px] border-4 border-pink-200 shadow-lg">
+                    <h3 class="text-2xl font-bold text-pink-600 mb-4">Ma qualité principale ✨</h3>
                     <textarea class="w-full bg-transparent text-2xl text-center resize-none focus:outline-none" rows="3"></textarea>
                 </div>
-                <div class="col-span-1 md:col-span-2 bg-purple-50 p-8 rounded-[40px] border-4 border-purple-200 shadow-lg text-center">
-                    <h3 class="text-2xl font-bold text-purple-600 mb-4">Plus tard, je veux être... 🚀</h3>
+                <div class="col-span-1 md:col-span-2 bg-yellow-50 p-8 rounded-[40px] border-4 border-yellow-200 shadow-lg text-center">
+                    <h3 class="text-2xl font-bold text-yellow-600 mb-4">Si j'étais un super-héros, mon pouvoir serait... 🦸</h3>
                     <input type="text" placeholder="..." class="w-full bg-transparent text-4xl font-bold text-center focus:outline-none">
                 </div>
             </div>
         </div>
 
-        <!-- 3. LEO LAGRANGE -->
         <div class="slide">
-            <h2 class="bubble-title">🦁 L'Association Léo Lagrange</h2>
-            <div class="text-9xl mb-8 animate-pulse">⛺ 🌍 🎲</div>
-            <p class="text-3xl text-gray-700 font-light mb-10 text-center">Éducation populaire pour :</p>
+            <h2 class="bubble-title">🦁 L'Association</h2>
+            <div class="text-9xl mb-8 animate-pulse">✊ 🏳️‍🌈 ♿</div>
+            <p class="text-3xl text-gray-700 font-light mb-10 text-center">Nous luttons contre :</p>
             <div class="flex gap-4">
-                <div class="bg-orange-100 text-orange-700 p-6 rounded-3xl text-xl font-bold">Le temps libre</div>
-                <div class="bg-blue-100 text-blue-700 p-6 rounded-3xl text-xl font-bold">L'émancipation</div>
-                <div class="bg-green-100 text-green-700 p-6 rounded-3xl text-xl font-bold">La citoyenneté</div>
+                <div class="bg-gray-100 text-gray-700 p-6 rounded-3xl text-xl font-bold">Le Racisme</div>
+                <div class="bg-pink-100 text-pink-700 p-6 rounded-3xl text-xl font-bold">Le Sexisme</div>
+                <div class="bg-blue-100 text-blue-700 p-6 rounded-3xl text-xl font-bold">L'Homophobie</div>
             </div>
         </div>
 
-        <!-- 4. RÈGLES -->
         <div class="slide">
-            <h2 class="bubble-title">📜 Les règles du jeu</h2>
+            <h2 class="bubble-title">📜 Cadre de confiance</h2>
             <div class="grid grid-cols-2 gap-6 w-full max-w-5xl">
-                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">👂</span> <span class="text-xl font-bold">On écoute</span></div>
-                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">🗣️</span> <span class="text-xl font-bold">On participe</span></div>
-                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">💬</span> <span class="text-xl font-bold">Dialogue ouvert</span></div>
-                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">❓</span> <span class="text-xl font-bold">On questionne</span></div>
-                <div class="col-span-2 bg-red-50 p-6 rounded-3xl flex justify-center items-center gap-6 shadow-md border-red-200 border-2">
-                    <span class="text-5xl">🎯</span> <span class="text-2xl font-bold text-red-500">Pas de cas personnel !</span>
+                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">👂</span> <span class="text-xl font-bold">Écoute active</span></div>
+                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">🤐</span> <span class="text-xl font-bold">Confidentialité</span></div>
+                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">🚫</span> <span class="text-xl font-bold">Pas de jugement</span></div>
+                <div class="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-md"><span class="text-5xl">👐</span> <span class="text-xl font-bold">Bienveillance</span></div>
+                <div class="col-span-2 bg-purple-50 p-6 rounded-3xl flex justify-center items-center gap-6 shadow-md border-purple-200 border-2">
+                    <span class="text-5xl">🤔</span> <span class="text-2xl font-bold text-purple-600">On a le droit de ne pas savoir !</span>
                 </div>
             </div>
         </div>
 
-        <!-- 5. NUAGE DE MOTS -->
         <div class="slide">
-            <h2 class="bubble-title">☁️ C'est quoi la violence ?</h2>
+            <h2 class="bubble-title">☁️ Vos Clichés</h2>
+            <p class="mb-4 text-gray-500">Quels clichés entendez-vous souvent ? (ex: "Les blondes sont...")</p>
             <div class="flex gap-4 w-full max-w-2xl mb-6 z-10">
-                <input type="text" id="wordInput" placeholder="Tapez un mot..." class="flex-1 p-4 rounded-full border-2 border-gray-300 text-xl focus:outline-none shadow-inner" onkeypress="if(event.key === 'Enter') addWord()">
-                <button onclick="addWord()" class="bg-blue-500 text-white px-8 rounded-full font-bold hover:bg-blue-600 transition shadow-lg">Ajouter</button>
+                <input type="text" id="wordInput" placeholder="Ex: Les garçons ne pleurent pas..." class="flex-1 p-4 rounded-full border-2 border-gray-300 text-xl focus:outline-none shadow-inner" onkeypress="if(event.key === 'Enter') addWord()">
+                <button onclick="addWord()" class="bg-purple-500 text-white px-8 rounded-full font-bold hover:bg-purple-600 transition shadow-lg">Ajouter</button>
             </div>
             <div id="cloud-container" class="w-full h-full border-4 border-dashed border-gray-200 rounded-[40px] p-8 flex flex-wrap justify-center items-center content-center bg-white relative">
-                <p class="text-gray-400 text-2xl opacity-30 absolute">Le nuage se forme ici...</p>
+                <p class="text-gray-400 text-2xl opacity-30 absolute">Le mur des préjugés...</p>
             </div>
             <script>
                 function addWord() {
@@ -237,11 +218,11 @@
                     if(text) {
                         const span = document.createElement('span');
                         span.textContent = text;
-                        span.style.color = ['#FF6B6B', '#4ECDC4', '#5f27cd'][Math.floor(Math.random()*3)];
-                        span.style.fontSize = (Math.floor(Math.random()*4)+2)+'rem';
+                        span.style.color = ['#a29bfe', '#ff7675', '#fdcb6e', '#00cec9'][Math.floor(Math.random()*4)];
+                        span.style.fontSize = (Math.floor(Math.random()*3)+1.5)+'rem';
                         span.style.fontWeight = '800';
-                        span.style.transform = `rotate(${Math.floor(Math.random()*40)-20}deg)`;
-                        span.style.padding = '10px';
+                        span.style.transform = `rotate(${Math.floor(Math.random()*20)-10}deg)`;
+                        span.style.padding = '15px';
                         document.getElementById('cloud-container').appendChild(span);
                         input.value = '';
                     }
@@ -249,124 +230,113 @@
             </script>
         </div>
 
-        <!-- 6. STATISTIQUES (COMPTEUR TEMPS RÉEL DEPUIS LANCEMENT) -->
         <div class="slide">
-            <h2 class="bubble-title">📊 Les Chiffres 2024/2025</h2>
+            <h2 class="bubble-title">📊 La réalité en France (2023)</h2>
             
             <div class="flex flex-wrap justify-center items-center gap-10 mb-12">
-                <div class="stat-bubble w-60 h-60 bg-red-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer" onclick="openStat('1 Million', 'Enfants touchés', 'Soit 1 élève sur 10. Une classe par école.')">
-                    <span class="text-5xl font-bold text-red-500">1 M</span><span class="text-gray-700 font-bold">Victimes / an</span>
+                <div class="stat-bubble w-60 h-60 bg-yellow-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer hover:scale-105 transition" onclick="openStat('+32%', 'Actes Racistes', 'Augmentation des crimes ou délits à caractère raciste en 2023 (Source : Min. Intérieur).')">
+                    <span class="text-5xl font-bold text-yellow-600">+32%</span><span class="text-gray-700 font-bold">Racisme</span>
                 </div>
-                <div class="stat-bubble w-72 h-72 bg-blue-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer" onclick="openStat('Collège', 'Zone Rouge', 'C\'est là que le harcèlement explose (6.7%).')">
-                    <span class="text-6xl font-bold text-blue-500">Collège</span><span class="text-gray-700 font-bold">Le pic</span>
+                <div class="stat-bubble w-72 h-72 bg-pink-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer hover:scale-105 transition" onclick="openStat('+13%', 'LGBTphobies', 'Augmentation des agressions physiques envers les personnes LGBT (Source : SOS Homophobie).')">
+                    <span class="text-6xl font-bold text-pink-500">+13%</span><span class="text-gray-700 font-bold">LGBTphobie</span>
                 </div>
-                <div class="stat-bubble w-52 h-52 bg-green-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer" onclick="openStat('+20%', 'Cyber-harcèlement', 'Le danger continue à la maison sur le téléphone.')">
-                    <span class="text-5xl font-bold text-green-600">+20%</span><span class="text-gray-700 font-bold">En ligne</span>
+                <div class="stat-bubble w-52 h-52 bg-blue-100 rounded-full flex flex-col justify-center items-center border-8 border-white shadow-2xl p-4 cursor-pointer hover:scale-105 transition" onclick="openStat('N°1', 'Handicap', 'Le handicap est le 1er motif de discrimination saisi auprès du Défenseur des droits depuis 7 ans.')">
+                    <span class="text-5xl font-bold text-blue-600">N°1</span><span class="text-gray-700 font-bold">Handicap</span>
                 </div>
             </div>
 
-            <!-- COMPTEUR DYNAMIQUE (DÉMARRE À 0) -->
-            <div class="bg-gray-900 text-red-500 p-6 rounded-2xl border-4 border-red-500 shadow-2xl text-center w-full max-w-3xl">
-                <h3 class="text-white text-lg uppercase tracking-widest mb-2">Victimes depuis le début de cette intervention</h3>
-                <div id="liveCounter" class="text-7xl font-mono font-bold text-red-500">0</div>
-                <p class="text-gray-400 text-sm mt-2 font-mono italic">Il y a une nouvelle victime toutes les 50 secondes en France...</p>
+            <div class="bg-gray-900 text-white p-6 rounded-2xl border-4 border-gray-700 shadow-2xl text-center w-full max-w-3xl">
+                <h3 class="text-gray-400 text-lg uppercase tracking-widest mb-2">Actes racistes/antisémites/xénophobes signalés</h3>
+                <div class="text-5xl font-mono font-bold text-white flex justify-center gap-4">
+                    <span>15</span><span>000</span>
+                    <span class="text-red-500 text-sm flex items-end mb-2">(Par an environ)</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-2 italic">Ce ne sont que les actes déclarés. La réalité est bien supérieure.</p>
             </div>
 
             <div id="statOverlay" class="stat-overlay">
-                <h2 id="ovTitle" class="text-9xl font-black text-blue-500 mb-6">TITRE</h2>
+                <h2 id="ovTitle" class="text-9xl font-black text-purple-600 mb-6">TITRE</h2>
                 <h3 id="ovSubtitle" class="text-5xl text-gray-800 mb-10 font-bold">Sous-titre</h3>
                 <p id="ovText" class="text-4xl text-gray-600 max-w-5xl text-center">Texte...</p>
-                <button onclick="document.getElementById('statOverlay').classList.remove('visible')" class="mt-16 bg-red-500 text-white px-12 py-5 rounded-full text-2xl font-bold">FERMER</button>
+                <button onclick="document.getElementById('statOverlay').classList.remove('visible')" class="mt-16 bg-gray-800 text-white px-12 py-5 rounded-full text-2xl font-bold">FERMER</button>
             </div>
 
             <script>
                 function openStat(t,s,txt) { document.getElementById('ovTitle').innerText=t; document.getElementById('ovSubtitle').innerText=s; document.getElementById('ovText').innerText=txt; document.getElementById('statOverlay').classList.add('visible'); }
-                
-                // Compteur live (Démarre à 0, +1 toutes les ~50 secondes)
-                let sessionVictims = 0;
-                function updateCounter() {
-                    sessionVictims++;
-                    document.getElementById('liveCounter').innerText = sessionVictims;
-                }
-                // 1.2 victimes par minute = 1 toutes les 50000 ms
-                setInterval(updateCounter, 50000);
             </script>
         </div>
 
-        <!-- 7. LES 3 OUI (VERSION NÉON ALLUMAGE) -->
-        <div class="slide" style="background: #000;">
-            <h2 class="text-5xl text-white font-bold mb-12 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">✅ Les 3 OUI du Consentement</h2>
-            <p class="text-gray-400 mb-8 animate-pulse text-center">Cliquez sur les panneaux pour les allumer</p>
+        <div class="slide" style="background: #1e1e1e;">
+            <h2 class="text-4xl text-white font-bold mb-4 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">⚙️ La Mécanique de la Haine</h2>
+            <p class="text-gray-400 mb-8 animate-pulse text-center">Comment ça marche ? Cliquez pour allumer.</p>
             
-            <div class="flex flex-col md:flex-row gap-8 w-full max-w-6xl justify-center items-center h-full pb-10 px-4">
+            <div class="flex flex-col md:flex-row gap-6 w-full max-w-7xl justify-center items-center h-full pb-10 px-4">
                 
-                <!-- OUI 1 -->
-                <div class="neon-off neon-blue p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-blue p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
-                    <div class="text-6xl mb-6 icon">🧠</div>
-                    <h3 class="text-4xl mb-6 font-bold">INFORMÉ</h3>
-                    <p class="text-xl">Je sais exactement à quoi je dis oui. Pas de secrets.</p>
+                <div class="neon-off neon-blue p-6 rounded-[30px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-blue p-6 rounded-[30px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                    <div class="text-6xl mb-4 icon">🧠</div>
+                    <h3 class="text-3xl mb-4 font-bold">1. STÉRÉOTYPE</h3>
+                    <p class="text-lg italic">"C'est une idée toute faite."</p>
+                    <hr class="w-1/2 border-blue-500 my-4 opacity-50">
+                    <p class="text-md">Croyance généralisante, souvent fausse, sur un groupe.</p>
+                    <p class="text-xs mt-2 text-blue-300">Ex: "Les jeunes ne savent pas travailler."</p>
                 </div>
 
-                <!-- OUI 2 -->
-                <div class="neon-off neon-green p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-green p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
-                    <div class="text-6xl mb-6 icon">🗽</div>
-                    <h3 class="text-4xl mb-6 font-bold">LIBRE</h3>
-                    <p class="text-xl">Je ne suis pas forcé. Je peux changer d'avis.</p>
+                <div class="neon-off neon-green p-6 rounded-[30px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-green p-6 rounded-[30px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                    <div class="text-6xl mb-4 icon">❤️</div>
+                    <h3 class="text-3xl mb-4 font-bold">2. PRÉJUGÉ</h3>
+                    <p class="text-lg italic">"C'est un jugement."</p>
+                    <hr class="w-1/2 border-orange-400 my-4 opacity-50">
+                    <p class="text-md">Attitude ou sentiment (souvent négatif) envers une personne à cause de son groupe.</p>
+                    <p class="text-xs mt-2 text-orange-200">Ex: "Je n'aime pas ce jeune, je me méfie."</p>
                 </div>
 
-                <!-- OUI 3 -->
-                <div class="neon-off neon-pink p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-pink p-8 rounded-[40px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
-                    <div class="text-6xl mb-6 icon">✨</div>
-                    <h3 class="text-4xl mb-6 font-bold">AUTHENTIQUE</h3>
-                    <p class="text-xl">Je le pense vraiment !</p>
+                <div class="neon-off neon-pink p-6 rounded-[30px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center" onclick="this.className='neon-on neon-pink p-6 rounded-[30px] w-full md:w-1/3 h-96 flex flex-col justify-center items-center text-center'">
+                    <div class="text-6xl mb-4 icon">✋</div>
+                    <h3 class="text-3xl mb-4 font-bold">3. DISCRIMINATION</h3>
+                    <p class="text-lg italic">"C'est un acte."</p>
+                    <hr class="w-1/2 border-red-500 my-4 opacity-50">
+                    <p class="text-md">Traiter quelqu'un différemment de manière illégale.</p>
+                    <p class="text-xs mt-2 text-red-300 font-bold">Ex: "Je ne l'embauche pas car il est jeune."</p>
                 </div>
 
             </div>
         </div>
 
-        <!-- 8. BAROMÈTRE DE LA VIOLENCE (TABLEAU COMPARATIF COMPLET) -->
         <div class="slide">
-            <h2 class="bubble-title">🌡️ Baromètre de la violence</h2>
+            <h2 class="bubble-title">⚖️ Échelle de la Discrimination</h2>
             
             <div class="w-full h-full flex flex-col p-2 max-w-7xl">
-                <!-- Situation -->
                 <div class="bg-white rounded-3xl p-4 mb-2 border-4 border-gray-100 flex flex-col items-center relative">
                     <div class="flex w-full gap-4 mt-2">
-                        <input id="situationInput" type="text" placeholder="Situation..." class="flex-1 p-3 border-2 border-gray-200 rounded-xl text-lg">
-                        <button onclick="document.getElementById('displaySituationText').innerText = document.getElementById('situationInput').value" class="bg-gray-800 text-white px-6 rounded-xl font-bold">Afficher</button>
+                        <input id="situationInput" type="text" placeholder="Entrez une situation (ex: Refuser l'entrée d'une boite...)" class="flex-1 p-3 border-2 border-gray-200 rounded-xl text-lg">
+                        <button onclick="document.getElementById('displaySituationText').innerText = document.getElementById('situationInput').value" class="bg-purple-600 text-white px-6 rounded-xl font-bold">Analyser</button>
                     </div>
                     <h2 id="displaySituationText" class="text-4xl font-black text-center text-gray-800 py-2">...</h2>
                 </div>
 
-                <!-- Boutons de Vote avec Compteurs Live -->
                 <div class="flex justify-between items-stretch gap-2 mb-2 h-32">
                     <div class="flex-1 flex flex-col gap-2">
                          <div id="live-0" class="text-center font-bold text-2xl text-green-600 bg-white rounded-full py-1 border-2 border-green-200">0</div>
-                         <button onclick="vote(0)" class="flex-1 bg-green-100 rounded-2xl font-bold border-b-4 border-green-300 flex flex-col items-center justify-center hover:bg-green-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😊</span> Pas violent</button>
+                         <button onclick="vote(0)" class="flex-1 bg-green-100 rounded-2xl font-bold border-b-4 border-green-300 flex flex-col items-center justify-center hover:bg-green-200"><span class="text-2xl">😐</span> Stéréotype</button>
                     </div>
                     <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-1" class="text-center font-bold text-2xl text-lime-600 bg-white rounded-full py-1 border-2 border-lime-200">0</div>
-                         <button onclick="vote(1)" class="flex-1 bg-lime-100 rounded-2xl font-bold border-b-4 border-lime-300 flex flex-col items-center justify-center hover:bg-lime-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😐</span> Peu violent</button>
+                         <div id="live-1" class="text-center font-bold text-2xl text-yellow-600 bg-white rounded-full py-1 border-2 border-yellow-200">0</div>
+                         <button onclick="vote(1)" class="flex-1 bg-yellow-100 rounded-2xl font-bold border-b-4 border-yellow-300 flex flex-col items-center justify-center hover:bg-yellow-200"><span class="text-2xl">😠</span> Préjugé</button>
                     </div>
                     <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-2" class="text-center font-bold text-2xl text-yellow-600 bg-white rounded-full py-1 border-2 border-yellow-200">0</div>
-                         <button onclick="vote(2)" class="flex-1 bg-yellow-100 rounded-2xl font-bold border-b-4 border-yellow-300 flex flex-col items-center justify-center hover:bg-yellow-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😠</span> Violent</button>
+                         <div id="live-2" class="text-center font-bold text-2xl text-orange-600 bg-white rounded-full py-1 border-2 border-orange-200">0</div>
+                         <button onclick="vote(2)" class="flex-1 bg-orange-100 rounded-2xl font-bold border-b-4 border-orange-300 flex flex-col items-center justify-center hover:bg-orange-200"><span class="text-2xl">🚫</span> Discrimination</button>
                     </div>
                     <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-3" class="text-center font-bold text-2xl text-orange-600 bg-white rounded-full py-1 border-2 border-orange-200">0</div>
-                         <button onclick="vote(3)" class="flex-1 bg-orange-100 rounded-2xl font-bold border-b-4 border-orange-300 flex flex-col items-center justify-center hover:bg-orange-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">😡</span> Très violent</button>
-                    </div>
-                    <div class="flex-1 flex flex-col gap-2">
-                         <div id="live-4" class="text-center font-bold text-2xl text-red-600 bg-white rounded-full py-1 border-2 border-red-200">0</div>
-                         <button onclick="vote(4)" class="flex-1 bg-red-100 rounded-2xl font-bold border-b-4 border-red-300 flex flex-col items-center justify-center hover:bg-red-200 active:translate-y-1 active:border-b-0"><span class="text-3xl">🤬</span> Trop violent</button>
+                         <div id="live-3" class="text-center font-bold text-2xl text-red-600 bg-white rounded-full py-1 border-2 border-red-200">0</div>
+                         <button onclick="vote(3)" class="flex-1 bg-red-100 rounded-2xl font-bold border-b-4 border-red-300 flex flex-col items-center justify-center hover:bg-red-200"><span class="text-2xl">🚔</span> Délit (Loi)</button>
                     </div>
                 </div>
 
                 <div class="flex justify-center mb-2">
-                    <button onclick="saveSituation()" class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold shadow-lg hover:bg-blue-700 transition">💾 Enregistrer et Comparer</button>
+                    <button onclick="saveSituation()" class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold shadow-lg hover:bg-blue-700 transition">💾 Enregistrer le vote</button>
                 </div>
 
-                <!-- Résultats TABLEAU COMPARATIF COMPLET -->
                 <div class="flex-1 flex gap-4 overflow-hidden h-48">
                     <div class="w-1/3 bg-white border-2 border-gray-100 rounded-3xl p-2 relative"><canvas id="barometerChart"></canvas></div>
                     <div class="w-2/3 bg-white border-2 border-gray-100 rounded-3xl p-4 overflow-y-auto">
@@ -374,137 +344,89 @@
                             <thead class="bg-gray-50 border-b">
                                 <tr class="text-sm">
                                     <th class="p-2">Situation</th>
-                                    <th class="p-2 text-center text-green-600">😊</th>
-                                    <th class="p-2 text-center text-lime-600">😐</th>
-                                    <th class="p-2 text-center text-yellow-600">😠</th>
-                                    <th class="p-2 text-center text-orange-600">😡</th>
-                                    <th class="p-2 text-center text-red-600">🤬</th>
+                                    <th class="p-2 text-center text-green-600">Stéréo.</th>
+                                    <th class="p-2 text-center text-yellow-600">Préjugé</th>
+                                    <th class="p-2 text-center text-orange-600">Discri.</th>
+                                    <th class="p-2 text-center text-red-600">Loi</th>
                                 </tr>
                             </thead>
-                            <tbody id="historyTable" class="text-sm">
-                                <!-- Lignes ajoutées ici -->
-                            </tbody>
+                            <tbody id="historyTable" class="text-sm"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
             <script>
-                let currentVotes = [0, 0, 0, 0, 0];
-                const colors = ['#4ade80', '#bef264', '#facc15', '#fb923c', '#f87171'];
-                const labels = ["Pas violent", "Peu violent", "Violent", "Très violent", "Trop violent"];
+                let currentVotes = [0, 0, 0, 0];
+                const colors = ['#4ade80', '#facc15', '#fb923c', '#f87171'];
+                const labels = ["Stéréotype", "Préjugé", "Discrimination", "Délit"];
                 let chartInstance = null;
 
                 setTimeout(() => {
                     chartInstance = new Chart(document.getElementById('barometerChart'), {
-                        type: 'doughnut', data: { labels: labels, datasets: [{ data: [1,1,1,1,1], backgroundColor: colors }] },
+                        type: 'doughnut', data: { labels: labels, datasets: [{ data: [1,1,1,1], backgroundColor: colors }] },
                         options: { maintainAspectRatio: false, plugins: { legend: {display:false} } }
                     });
                 }, 500);
 
                 function vote(idx) {
                     currentVotes[idx]++;
-                    document.getElementById(`live-${idx}`).innerText = currentVotes[idx]; // Update live counter
+                    document.getElementById(`live-${idx}`).innerText = currentVotes[idx];
                 }
 
                 function saveSituation() {
                     const sit = document.getElementById('displaySituationText').innerText;
                     if(sit === "..." || sit === "") return;
                     
-                    // Add to table with ALL columns
                     const row = `
                         <tr class="border-b hover:bg-gray-50">
                             <td class="py-2 font-bold px-2">${sit}</td>
                             <td class="text-center font-bold text-green-600">${currentVotes[0]}</td>
-                            <td class="text-center font-bold text-lime-600">${currentVotes[1]}</td>
-                            <td class="text-center font-bold text-yellow-600">${currentVotes[2]}</td>
-                            <td class="text-center font-bold text-orange-600">${currentVotes[3]}</td>
-                            <td class="text-center font-bold text-red-600">${currentVotes[4]}</td>
+                            <td class="text-center font-bold text-yellow-600">${currentVotes[1]}</td>
+                            <td class="text-center font-bold text-orange-600">${currentVotes[2]}</td>
+                            <td class="text-center font-bold text-red-600">${currentVotes[3]}</td>
                         </tr>`;
                     document.getElementById('historyTable').innerHTML = row + document.getElementById('historyTable').innerHTML;
                     
-                    // Update Chart
                     chartInstance.data.datasets[0].data = currentVotes;
                     chartInstance.update();
 
-                    // Reset
-                    currentVotes = [0,0,0,0,0];
-                    for(let i=0;i<5;i++) document.getElementById(`live-${i}`).innerText = "0";
+                    currentVotes = [0,0,0,0];
+                    for(let i=0;i<4;i++) document.getElementById(`live-${i}`).innerText = "0";
                     document.getElementById('situationInput').value = "";
                 }
             </script>
         </div>
 
-        <!-- 9. VIDÉO -->
         <div class="slide">
-             <h2 class="bubble-title">📺 Vidéo</h2>
+             <h2 class="bubble-title">📺 La loi en 2min</h2>
              <div class="w-full max-w-5xl aspect-video bg-black rounded-[40px] overflow-hidden shadow-2xl border-8 border-gray-800">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/Ia5ijY5vVyk" frameborder="0" allowfullscreen></iframe>
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/e2cNSBtWeGk" frameborder="0" allowfullscreen></iframe>
              </div>
         </div>
 
-        <!-- 10. ARC EN CIEL (DÉTAILLÉ AVEC TEXTES COMPLETS) -->
         <div class="slide">
-            <h2 class="bubble-title">🌈 L'Arc-en-ciel des possibles</h2>
+            <h2 class="bubble-title">🧩 Analyse de situations</h2>
             <div class="scroll-y w-full px-4 pb-20">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                     <!-- Génération JS pour éviter la répétition -->
                      <script>
                          const situations = [
-                             { 
-                                 t:"Physique", i:"👕", 
-                                 sit:"Un groupe se moque de la tenue d'un élève dans la cour.", 
-                                 harc:"Critique les vêtements à voix haute et incite les autres à rire.", 
-                                 vic:"Baisse la tête, rougit et n'ose plus mettre ce vêtement.", 
-                                 tem:"Intervient : 'C'est juste un vêtement, on s'en fiche, arrêtez ça.'" 
-                             },
-                             { 
-                                 t:"Isolement", i:"🚫", 
-                                 sit:"Personne ne veut manger avec lui à la cantine.", 
-                                 harc:"Dit fort : 'Il est bizarre, ne l'approchez pas, on veut pas de lui.'", 
-                                 vic:"Mange seule dans son coin, triste et isolée.", 
-                                 tem:"Va s'asseoir à sa table pour manger avec lui et discuter." 
-                             },
-                             { 
-                                 t:"Rumeurs", i:"🤫", 
-                                 sit:"On raconte partout qu'elle a fait des choses graves.", 
-                                 harc:"Invente des détails gênants pour se rendre intéressant.", 
-                                 vic:"A honte de venir au collège, sent les regards sur elle.", 
-                                 tem:"Répond aux rumeurs : 'C'est faux, tu n'en sais rien, tais-toi.'" 
-                             },
-                             { 
-                                 t:"Cyber", i:"📱", 
-                                 sit:"Une photo humiliante est partagée sur un groupe Snap.", 
-                                 harc:"Diffuse la photo, demande des screens et se moque.", 
-                                 vic:"Ne veut plus sortir de sa chambre, a peur de revenir en cours.", 
-                                 tem:"Ne partage pas, ne like pas. Fait une capture d'écran et appelle le 3018." 
-                             },
-                             { 
-                                 t:"Pression", i:"😈", 
-                                 sit:"Un groupe force un élève à voler un truc au magasin.", 
-                                 harc:"Traite l'élève de 'poule mouillée' et menace de l'exclure s'il refuse.", 
-                                 vic:"Tremble, a peur des conséquences mais a peur du groupe.", 
-                                 tem:"Rappelle les risques : 'On va tous avoir des ennuis, ça vaut pas le coup, on part'." 
-                             },
-                             { 
-                                 t:"Critique", i:"📢", 
-                                 sit:"Moqueries méchantes quand il passe au tableau.", 
-                                 harc:"Imite sa voix, fait des bruits pour le déconcentrer.", 
-                                 vic:"Perd ses moyens, bafouille et n'arrive plus à parler.", 
-                                 tem:"Encourage à voix haute : 'Vas-y continue, on t'écoute nous !'." 
-                             }
+                             { t:"Le Logement", i:"🏠", sit:"Un proprio refuse de louer son appart à cause du nom de famille du locataire.", type:"DISCRIMINATION (Illégal)" },
+                             { t:"Le Sport", i:"⚽", sit:"'Le foot c'est pour les garçons, la danse pour les filles.'", type:"STÉRÉOTYPE (Croyance)" },
+                             { t:"L'Emploi", i:"💼", sit:"Un patron jette un CV car il n'aime pas la photo (couleur de peau).", type:"DISCRIMINATION (Illégal)" },
+                             { t:"La Peur", i:"😨", sit:"Changer de trottoir quand on croise un groupe de jeunes en capuche.", type:"PRÉJUGÉ (Sentiment)" },
+                             { t:"L'École", i:"🎒", sit:"Refuser qu'un élève en fauteuil roulant aille au voyage scolaire.", type:"DISCRIMINATION (Handicap)" },
+                             { t:"Les Maths", i:"📐", sit:"'Les asiatiques sont forcément bons en maths.'", type:"STÉRÉOTYPE (Positif mais faux)" }
                          ];
                          situations.forEach((s) => {
                              document.write(`
-                                <div class="bg-white p-6 rounded-3xl border-2 border-gray-200 shadow hover:shadow-xl transition cursor-pointer" onclick="this.querySelector('.detail').classList.toggle('hidden')">
+                                <div class="bg-white p-6 rounded-3xl border-2 border-gray-200 shadow hover:shadow-xl transition cursor-pointer group" onclick="this.querySelector('.reponse').classList.toggle('hidden')">
                                     <div class="flex items-center gap-3 mb-4"><span class="text-4xl">${s.i}</span><h3 class="font-bold text-2xl text-gray-800">${s.t}</h3></div>
-                                    <p class="text-md font-semibold text-gray-600 mb-4 border-l-4 border-blue-400 pl-3">${s.sit}</p>
-                                    <div class="detail hidden space-y-3 text-sm bg-gray-50 p-4 rounded-xl">
-                                        <div class="text-red-600 border-l-2 border-red-200 pl-2"><strong>👿 Harceleur :</strong> ${s.harc}</div>
-                                        <div class="text-blue-600 border-l-2 border-blue-200 pl-2"><strong>😢 Victime :</strong> ${s.vic}</div>
-                                        <div class="text-green-700 bg-green-100 p-2 rounded border-l-4 border-green-500"><strong>🦸 Témoin Agit :</strong> ${s.tem}</div>
+                                    <p class="text-md font-semibold text-gray-600 mb-4 border-l-4 border-purple-400 pl-3 min-h-[60px]">${s.sit}</p>
+                                    <div class="reponse hidden mt-4 bg-gray-900 text-white p-4 rounded-xl text-center font-bold animate-pulse">
+                                        ${s.type}
                                     </div>
-                                    <p class="text-center text-xs text-gray-400 mt-2 detail font-bold">▼ Cliquez pour voir les rôles ▼</p>
+                                    <p class="text-center text-xs text-gray-400 mt-2 font-bold group-hover:text-purple-500">▼ Réponse ▼</p>
                                 </div>
                              `);
                          });
@@ -513,67 +435,45 @@
             </div>
         </div>
 
-        <!-- 13. LE 3018 (EXPLICATIONS AJOUTÉES) -->
         <div class="slide">
-            <div class="marquee-container"><div class="marquee-content">INSULTES SUR INTERNET > 3018  •  PHOTOS VOLÉES > 3018  •  MENACES EN LIGNE > 3018  •  HARCÈLEMENT SCOLAIRE > 3018  •  RUMEURS > 3018</div></div>
+            <div class="marquee-container"><div class="marquee-content">ORIGINE > 3928 • HANDICAP > 3928 • SEXISME > 3928 • LOGEMENT > 3928 • EMPLOI > 3928 • LGBTPHOBIE > 3928</div></div>
             
-            <h2 class="bubble-title mt-16">📞 Violences Numériques</h2>
-            <div class="bg-blue-600 text-white rounded-[50px] p-8 text-center shadow-2xl w-full max-w-5xl border-8 border-white relative flex flex-col items-center gap-6">
-                <div class="bg-white p-6 rounded-3xl shadow-lg inline-block">
-                   <img src="https://jeprotegemonenfant.gouv.fr/app/uploads/2021/11/Logo-3018.png" style="height: 100px;">
+            <h2 class="bubble-title mt-16">📞 Victime ou Témoin ?</h2>
+            <div class="bg-indigo-600 text-white rounded-[50px] p-8 text-center shadow-2xl w-full max-w-5xl border-8 border-white relative flex flex-col items-center gap-6">
+                
+                <div class="flex gap-8 justify-center w-full">
+                    <div class="bg-white p-6 rounded-3xl shadow-lg flex flex-col items-center w-1/2">
+                       <h3 class="text-6xl font-black text-indigo-600">39 28</h3>
+                       <p class="text-gray-500 font-bold uppercase mt-2">Anti-Discriminations</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-lg flex flex-col items-center w-1/2">
+                       <h3 class="text-6xl font-black text-blue-500">30 18</h3>
+                       <p class="text-gray-500 font-bold uppercase mt-2">Cyber-harcèlement</p>
+                    </div>
                 </div>
                 
-                <h3 class="text-5xl font-extrabold tracking-wide">Gratuit • Anonyme • Confidentiel</h3>
-                
-                <p class="text-lg bg-blue-700 p-4 rounded-2xl max-w-2xl leading-relaxed">
-                    Le 3018 est le numéro national pour les jeunes victimes de violences numériques et de harcèlement scolaire.
-                    <br>Des professionnels (psychologues, juristes) t'écoutent et t'aident à faire retirer des contenus (photos, vidéos, commentaires) des réseaux sociaux en quelques heures.
+                <p class="text-lg bg-indigo-700 p-4 rounded-2xl max-w-2xl leading-relaxed mt-4">
+                    Le <strong>39 28</strong> est le numéro officiel du Défenseur des droits.
+                    <br>Des juristes t'écoutent gratuitement si tu penses avoir été victime de discrimination (refus d'entrée, de stage, insulte raciste...).
                 </p>
 
-                <div class="bg-white text-blue-600 px-12 py-6 rounded-full font-bold text-3xl shadow-xl blink-slow inline-block border-8 border-yellow-400">
-                    ⚠️ INSTALLEZ L'APPLICATION 3018 !
-                </div>
-                
-                <p class="text-sm italic opacity-80">L'application permet de stocker les preuves (captures d'écran) dans un coffre-fort numérique sécurisé.</p>
-            </div>
-        </div>
-
-        <!-- 14. LE 3928 (EXPLICATIONS AJOUTÉES) -->
-        <div class="slide">
-            <div class="marquee-container" style="background:#333; color:white;"><div class="marquee-content">DISCRIMINATION RACIALE > 3928  •  REFUS DE SOIN > 3928  •  HANDICAP > 3928  •  ORIGINE > 3928  •  APPARENCE > 3928</div></div>
-
-            <h2 class="bubble-title mt-16" style="background: #374151;">⚖️ Discriminations</h2>
-            <div class="bg-gray-800 text-white rounded-[50px] p-8 text-center shadow-2xl w-full max-w-5xl border-8 border-white flex flex-col items-center gap-6">
-                 <div class="bg-white p-6 rounded-3xl shadow-lg inline-block">
-                    <img src="https://www.antidiscriminations.fr/sites/default/files/2021-02/logo-antidiscriminations-3928.png" style="height: 100px;">
-                 </div>
-                 
-                <h3 class="text-5xl font-extrabold tracking-wide">Contre toutes les discriminations</h3>
-                
-                <p class="text-lg bg-gray-700 p-4 rounded-2xl max-w-2xl leading-relaxed">
-                    Si tu es traité différemment ou rejeté à cause de ton origine, ta couleur de peau, ton handicap, ton sexe ou ta religion, c'est interdit par la loi.
-                    <br>Ce numéro te met en lien avec des juristes du Défenseur des Droits qui vont faire respecter tes droits.
-                </p>
-
-                <div class="bg-white text-gray-800 px-12 py-6 rounded-full font-bold text-3xl shadow-xl blink-slow inline-block border-8 border-blue-400">
-                     🛡️ C'EST L'ÉTAT QUI TE PROTÈGE
+                <div class="bg-white text-indigo-600 px-12 py-6 rounded-full font-bold text-3xl shadow-xl blink-slow inline-block border-8 border-yellow-400">
+                    🛡️ C'EST LA LOI QUI TE PROTÈGE
                 </div>
             </div>
         </div>
 
-        <!-- 15. QUIZ ÉTENDU -->
         <div class="slide">
-            <h2 class="bubble-title">❓ Le Quiz Final</h2>
-            <div id="quiz-container" class="w-full max-w-4xl bg-white p-10 rounded-[40px] shadow-2xl border-4 border-blue-50"></div>
+            <h2 class="bubble-title">❓ Quiz Final</h2>
+            <div id="quiz-container" class="w-full max-w-4xl bg-white p-10 rounded-[40px] shadow-2xl border-4 border-purple-50"></div>
             <script>
                 const quizData=[
-                    {q:"Combien d'élèves sont victimes de harcèlement chaque année ?",o:["100 000","500 000","1 Million"],c:2},
-                    {q:"Le numéro 3018 permet de...",o:["Faire ses devoirs","Supprimer des photos/vidéos en ligne","Commander une pizza"],c:1},
-                    {q:"Quel est le seul OUI valide pour le consentement ?",o:["Le 'Oui' sous la pression","Le 'Oui' hésitant","Le 'Oui' libre et enthousiaste"],c:2},
-                    {q:"Que doit faire un témoin de harcèlement ?",o:["Rien, ce n'est pas son problème","Filmer la scène pour mettre sur Snap","Aller chercher un adulte ou intervenir"],c:2},
-                    {q:"Laquelle de ces situations est une discrimination punie par la loi ?",o:["Ne pas aimer les épinards","Refuser l'entrée à quelqu'un à cause de sa couleur de peau","Avoir une mauvaise note"],c:1},
-                    {q:"Le cyber-harcèlement s'arrête-t-il après l'école ?",o:["Oui, c'est fini à 17h","Non, ça continue sur le téléphone à la maison","Seulement le week-end"],c:1},
-                    {q:"L'isolement (mettre quelqu'un à l'écart), c'est...",o:["Une forme de violence","Juste un jeu","Pas grave"],c:0}
+                    {q:"Un stéréotype, c'est...",o:["Un acte puni par la loi","Une idée toute faite sur un groupe","Une vérité scientifique"],c:1},
+                    {q:"Refuser un emploi à cause de la couleur de peau, c'est...",o:["Un choix personnel","Une discrimination (Délit)","Un préjugé"],c:1},
+                    {q:"Quel est le critère n°1 de discrimination en France ?",o:["L'origine","Le handicap","L'âge"],c:1},
+                    {q:"Quel numéro appeler si je suis discriminé ?",o:["Le 18","Le 39 28","Le 118 218"],c:1},
+                    {q:"Dire 'Les filles sont douces', c'est...",o:["Gentil","Un stéréotype de genre","Une preuve d'amour"],c:1},
+                    {q:"La discrimination est punie par...",o:["Le règlement intérieur seulement","Le Code Pénal (Prison/Amende)","Les parents"],c:1}
                 ];
                 let qIdx=0;
                 function loadQ(){
@@ -581,7 +481,7 @@
                     document.getElementById('quiz-container').innerHTML=`
                         <h3 class='text-3xl font-bold mb-6'>Question ${qIdx+1}/${quizData.length}</h3>
                         <p class='text-2xl mb-8 font-semibold'>${d.q}</p>
-                        <div class='grid gap-4'>${d.o.map((x,i)=>`<button onclick='chk(${i},${d.c},this)' class='bg-gray-100 p-4 rounded-xl text-xl hover:bg-blue-100 border-2 border-transparent transition'>${x}</button>`).join('')}</div>
+                        <div class='grid gap-4'>${d.o.map((x,i)=>`<button onclick='chk(${i},${d.c},this)' class='bg-gray-100 p-4 rounded-xl text-xl hover:bg-purple-100 border-2 border-transparent transition'>${x}</button>`).join('')}</div>
                     `;
                 }
                 function chk(s,c,b){
@@ -590,7 +490,7 @@
                     
                     if(s===c){ 
                         b.style.background="#4ade80"; b.style.borderColor="#22c55e"; b.style.color="white";
-                        setTimeout(()=>{if(++qIdx<quizData.length)loadQ(); else document.getElementById('quiz-container').innerHTML="<div class='flex flex-col items-center'><div class='text-9xl mb-4 animate-bounce'>🏆</div><h1 class='text-6xl font-bold text-green-600'>BRAVO !</h1><p class='text-2xl mt-4'>Tu es un expert du vivre ensemble !</p></div>"},1200);
+                        setTimeout(()=>{if(++qIdx<quizData.length)loadQ(); else document.getElementById('quiz-container').innerHTML="<div class='flex flex-col items-center'><div class='text-9xl mb-4 animate-bounce'>🏆</div><h1 class='text-6xl font-bold text-green-600'>BRAVO !</h1><p class='text-2xl mt-4'>Tu sais déjouer les préjugés !</p></div>"},1200);
                     } else { 
                         b.style.background="#f87171"; b.style.borderColor="#ef4444"; b.style.color="white";
                         setTimeout(() => btns.forEach(btn => btn.disabled = false), 1000);
@@ -600,11 +500,11 @@
             </script>
         </div>
 
-        <!-- 16. FIN -->
         <div class="slide">
             <h2 class="text-7xl font-bold text-gray-800 mb-8">Merci ! 🙏</h2>
-            <div class="text-9xl animate-bounce mb-8">👋</div>
-            <button onclick="location.reload()" class="bg-blue-600 text-white px-12 py-5 rounded-full font-bold text-2xl shadow-xl hover:scale-110 transition">Recommencer</button>
+            <div class="text-9xl animate-bounce mb-8">✊</div>
+            <p class="text-2xl text-gray-500 mb-8">"Nos différences sont nos richesses."</p>
+            <button onclick="location.reload()" class="bg-purple-600 text-white px-12 py-5 rounded-full font-bold text-2xl shadow-xl hover:scale-110 transition">Recommencer</button>
         </div>
 
     </div>
